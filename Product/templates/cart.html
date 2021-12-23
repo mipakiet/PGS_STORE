@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+
+  <div class="container">
+
+    <div class="row ">
+      <h1>Twój koszyk:</h1>
+    </div>
+    <div class="row ">
+      <div class="col-lg-9 bg-light py-3">
+        {%if objects %}
+        {% for product_object, cart_object, price in objects %}
+        <div class="container product_list py-3">
+          <a class="text-decoration-none text-dark" href="/product/{{product_object.id}}">
+            <div class="row">
+              <div class="col-2">
+                  <img class="img-list" src="{{product_object.image.url}}" alt="" style="object-fit: fill;" width="125" height="100">
+              </div>
+              <div class="col-4">
+                <span class="fs-2">{{product_object.title}}</span>
+                <p>{{product_object.price}} zł</p>
+              </div>
+              <div class="col-2">
+                <div class="m-3 p-3 fs-5">Ilość: {{cart_object.quantity}}</div>
+              </div>
+              <div class="col-2">
+                <div class="m-3 p-3 fs-5">{{price}}zł</div>
+              </div>
+              <div class="col-2">
+                <form action="" method="POST">
+                  {% csrf_token %}
+                  <button class="btn btn-primary text-white btn-lg m-3 py-3 w-100 fs-5" type="submit" name='cart_object_id' value='{{cart_object.id}}'>Usun</button>
+                </form>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% if not forloop.last %}
+          <div class="border border-bottom border-1 rounded-3"></div>
+        {% endif %}
+        {% endfor %}
+        {% else %}
+          <p>Nie masz nic w koszyku</p>
+        {% endif %}
+      </div>
+
+      <div class="col-lg-3">
+        <div class="mx-3 bg-light h-100 p-4">
+          <p class="fs-3">{{price_for_everything}}zł</p>
+          <button class="btn btn-primary text-white  btn-lg" type="submit">Kupuje!</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mt-3"></div>
+
+{% endblock %}

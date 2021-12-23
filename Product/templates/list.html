@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block content %}
+
+  <div class="container">
+    <div class="row ">
+      <div class="col-sm-3">
+        <div class="container bg-light p-4 h-100">
+          <form action="" method="GET">
+
+            <input type='hidden' value='T' name='get'>
+
+            <h3 class="mb-3">Sortuj</h3>
+            <select class="form-select" name="order">
+                {% if order == 4 %}
+                <option value="1">Cena rosnąco</option>
+                <option value="2">Cena malejąco</option>
+                <option value="3">Nazwa A-Z</option>
+                <option value="4" selected>Nazwa Z-A</option>
+                {% elif order == 2 %}
+                <option value="1">Cena rosnąco</option>
+                <option value="2" selected>Cena malejąco</option>
+                <option value="3">Nazwa A-Z</option>
+                <option value="4">Nazwa Z-A</option>
+                {% elif order == 3 %}
+                <option value="1">Cena rosnąco</option>
+                <option value="2">Cena malejąco</option>
+                <option value="3" selected>Nazwa A-Z</option>
+                <option value="4">Nazwa Z-A</option>
+                {% else %}
+                <option value="1" selected>Cena rosnąco</option>
+                <option value="2">Cena malejąco</option>
+                <option value="3">Nazwa A-Z</option>
+                <option value="4">Nazwa Z-A</option>
+                {% endif %}
+            </select>
+
+            <h3 class="my-3">Cena</h3>
+            Od
+            <div class="input-group mb-3">
+              <input type="number" name="priceMin" min="0" class="form-control" value="{{priceMin}}">
+              <span class="input-group-text">zł</span>
+            </div>
+            Do
+            <div class="input-group mb-3">
+              <input type="number" name="priceMax" min="0" class="form-control" value="{{priceMax}}">
+              <span class="input-group-text">zł</span>
+            </div>
+          
+            <h3 class="my-3">Miasto</h3>
+            <div class="form-check">
+              {% if cityWro == 'T' %}
+              <input class="form-check-input mt-2" name="cityWro" value="T" type="checkbox" id="flexCheckCheckedWRO" style="width: 20px; height: 20px;" checked>
+              {% else %}
+              <input class="form-check-input mt-2" name="cityWro" value="T" type="checkbox" id="flexCheckCheckedWRO" style="width: 20px; height: 20px;">
+              {% endif %}
+              <label class="form-check-label ms-2 fs-5 mt-1" for="flexCheckCheckedWRO">
+                Wrocław
+              </label>
+            </div>
+            <div class="form-check">
+              {% if cityGda == 'T' %}
+              <input class="form-check-input mt-2" name="cityGda" value="T" type="checkbox" id="flexCheckCheckedGDA" style="width: 20px; height: 20px;" checked>
+              {% else %}
+              <input class="form-check-input mt-2" name="cityGda" value="T" type="checkbox" id="flexCheckCheckedGDA" style="width: 20px; height: 20px;">
+              {% endif %}
+              <label class="form-check-label ms-2 fs-5 mt-1" for="flexCheckCheckedGDA">
+                Gdańsk
+              </label>
+            </div>
+            <div class="form-check">
+              {% if cityRze == 'T' %}
+              <input class="form-check-input mt-2" name="cityRze" value="T" type="checkbox" id="flexCheckCheckedRZE" style="width: 20px; height: 20px;" checked>
+              {% else %}
+              <input class="form-check-input mt-2" name="cityRze" value="T" type="checkbox" id="flexCheckCheckedRZE" style="width: 20px; height: 20px;">
+              {% endif %}
+              <label class="form-check-label ms-2 fs-5 mt-1" for="flexCheckCheckedRZE">
+                Rzeszów
+              </label>
+            </div>
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-primary text-white mt-3 mw-100">Filtruj</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-9 bg-light py-3">
+        {%if product_objects %}
+        {% for object in product_objects %}
+
+        <div class="container product_list py-3">
+          <a class="text-decoration-none text-dark" href="/product/{{object.id}}">
+            <div class="row">
+              <div class="col-4">
+                  <img class="img-list" src="{{object.image.url}}" alt="" style="object-fit: fill;" width="250" height="200">
+              </div>
+              <div class="col-8 ">
+                <span class="fs-2">{{object.title}}</span>
+                <div class="overflow-hidden" style="height: 70px;">{{object.description}}</div>
+                <div class="row mt-5">
+                  <div class="col-6">
+                    <p>{{object.city}}</p>
+                  </div>
+                  <div class="col-6">
+                    <p class="text-end fs-6"><strong>{{object.price}} zł</strong></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% if not forloop.last %}
+          <div class="border border-bottom border-1 rounded-3"></div>
+        {% endif %}
+        {% endfor %}
+        {% else %}
+          <p>Nie ma produktów na sprzedaż w tej kategorii :(</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="mt-3"></div>
+
+{% endblock %}
