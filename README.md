@@ -3,7 +3,8 @@ Web App for selling stuff for employees.</br>
 Making with Django 3 framework with python 3.7 and Bootstrap 5 library.
 
 ##Installation
-1. Type in cmd "python3 -m venv ./venv"
+Follow commends in cmd
+1. python3 -m venv ./venv
 2. .\venv\Scripts\activate
 3. git clone "https://github.com/River213/PGS_STORE.git"
 4. pip install -r .\requirements.txt
