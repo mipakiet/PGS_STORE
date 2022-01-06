@@ -6,17 +6,25 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('Product', '0007_alter_product_image'),
-    ]
+    dependencies = [("Product", "0007_alter_product_image")]
 
     operations = [
         migrations.CreateModel(
-            name='Computer',
+            name="Computer",
             fields=[
-                ('product_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='Product.product')),
-                ('Ram', models.DecimalField(decimal_places=0, max_digits=6)),
+                (
+                    "product_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="Product.product",
+                    ),
+                ),
+                ("Ram", models.DecimalField(decimal_places=0, max_digits=6)),
             ],
-            bases=('Product.product',),
-        ),
+            bases=("Product.product",),
+        )
     ]

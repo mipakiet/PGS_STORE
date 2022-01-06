@@ -6,21 +6,31 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('Product', '0009_rename_ram_computer_ram'),
-    ]
+    dependencies = [("Product", "0009_rename_ram_computer_ram")]
 
     operations = [
         migrations.CreateModel(
-            name='City',
+            name="City",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=10)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=10)),
             ],
         ),
         migrations.AddField(
-            model_name='product',
-            name='city',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='Product.city'),
+            model_name="product",
+            name="city",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="Product.city",
+            ),
         ),
     ]

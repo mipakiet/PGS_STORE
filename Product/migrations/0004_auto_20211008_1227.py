@@ -6,41 +6,53 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('Product', '0003_product_producer'),
-    ]
+    dependencies = [("Product", "0003_product_producer")]
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=25)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=25)),
             ],
         ),
         migrations.AlterField(
-            model_name='producer',
-            name='name',
-            field=models.CharField(max_length=25),
+            model_name="producer", name="name", field=models.CharField(max_length=25)
         ),
         migrations.AlterField(
-            model_name='product',
-            name='price',
+            model_name="product",
+            name="price",
             field=models.DecimalField(decimal_places=2, max_digits=10),
         ),
         migrations.AlterField(
-            model_name='product',
-            name='producer',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='Product.producer'),
+            model_name="product",
+            name="producer",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="Product.producer",
+            ),
         ),
         migrations.AlterField(
-            model_name='product',
-            name='title',
-            field=models.CharField(max_length=25),
+            model_name="product", name="title", field=models.CharField(max_length=25)
         ),
         migrations.AddField(
-            model_name='product',
-            name='category',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='Product.category'),
+            model_name="product",
+            name="category",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="Product.category",
+            ),
         ),
     ]

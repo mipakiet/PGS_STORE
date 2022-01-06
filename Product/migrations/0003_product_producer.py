@@ -6,14 +6,16 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('Product', '0002_auto_20211008_1111'),
-    ]
+    dependencies = [("Product", "0002_auto_20211008_1111")]
 
     operations = [
         migrations.AddField(
-            model_name='product',
-            name='producer',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='Product.producer'),
-        ),
+            model_name="product",
+            name="producer",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="Product.producer",
+            ),
+        )
     ]

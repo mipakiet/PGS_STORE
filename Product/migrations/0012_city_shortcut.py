@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('Product', '0011_category_image'),
-    ]
+    dependencies = [("Product", "0011_category_image")]
 
     operations = [
         migrations.AddField(
-            model_name='city',
-            name='shortcut',
+            model_name="city",
+            name="shortcut",
             field=models.CharField(max_length=3, null=True),
-        ),
+        )
     ]

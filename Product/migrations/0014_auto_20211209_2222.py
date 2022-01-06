@@ -9,26 +9,50 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('Product', '0013_product_cuantity'),
+        ("Product", "0013_product_cuantity"),
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='product',
-            name='cuantity',
-        ),
+        migrations.RemoveField(model_name="product", name="cuantity"),
         migrations.AddField(
-            model_name='product',
-            name='quantity',
+            model_name="product",
+            name="quantity",
             field=models.DecimalField(decimal_places=0, default=0, max_digits=1000),
         ),
         migrations.CreateModel(
-            name='Carts',
+            name="Carts",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.DecimalField(decimal_places=0, default=0, max_digits=1000)),
-                ('product', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='Product.product')),
-                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "quantity",
+                    models.DecimalField(decimal_places=0, default=0, max_digits=1000),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="Product.product",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

@@ -5,21 +5,25 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('Product', '0001_initial'),
-    ]
+    dependencies = [("Product", "0001_initial")]
 
     operations = [
         migrations.CreateModel(
-            name='Producer',
+            name="Producer",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=15)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=15)),
             ],
         ),
         migrations.RenameField(
-            model_name='product',
-            old_name='descrition',
-            new_name='description',
+            model_name="product", old_name="descrition", new_name="description"
         ),
     ]

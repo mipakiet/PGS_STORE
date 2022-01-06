@@ -8,12 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('Product', '0015_rename_carts_cart'),
+        ("Product", "0015_rename_carts_cart"),
     ]
 
-    operations = [
-        migrations.RenameModel(
-            old_name='Cart',
-            new_name='CartItem',
-        ),
-    ]
+    operations = [migrations.RenameModel(old_name="Cart", new_name="CartItem")]

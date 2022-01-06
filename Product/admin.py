@@ -7,4 +7,3 @@ admin.site.register(Category)
 admin.site.register(Computer)
 admin.site.register(City)
 admin.site.register(CartItem)
-
