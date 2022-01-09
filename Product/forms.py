@@ -21,4 +21,3 @@
 #     cityWro.widget.attrs.update({'class':'form-check-input', 'value': 'WRO'})
 #     cityGda.widget.attrs.update({'class':'form-check-input', 'value': 'GDA'})
 #     cityRze.widget.attrs.update({'class':'form-check-input', 'value': 'RZE'})
-
