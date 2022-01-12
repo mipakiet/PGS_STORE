@@ -14,6 +14,8 @@ Follow commends in cmd
    #local_setting.py
    DEBUG = True
    SECRET_KEY = 'django-insecure-<write secret key>'
+   INTERNAL_IPS = ["127.0.0.1"]
+]
    ```
 
 7. py .\manage.py makemigrations
