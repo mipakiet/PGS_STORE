@@ -16,7 +16,6 @@ Follow commends in cmd
    SECRET_KEY = 'django-insecure-<write secret key>'
    INTERNAL_IPS = ["127.0.0.1"]
 ]
-   ```
 
 7. py .\manage.py makemigrations
 8. py .\manage.py migrate --run-syncdb
