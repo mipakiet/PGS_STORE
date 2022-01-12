@@ -1,5 +1,5 @@
 from django.contrib.admin import AdminSite
-from Product.views import CartItem
+from product.views import CartItem
 
 
 class EventAdminSite(AdminSite):

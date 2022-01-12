@@ -6,7 +6,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from Product.views import *
+from product.views import *
 
 urlpatterns = [
     path("entity-admin/", admin.site.urls),
