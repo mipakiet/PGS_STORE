@@ -7,8 +7,8 @@ Follow commends in cmd
 1. python3 -m venv ./venv
 2. .\venv\Scripts\activate
 3. git clone "https://github.com/River213/PGS_STORE.git"
-4. pip install -r .\requirements.txt
-5. cd .\PGS_STORE\
+4. cd .\PGS_STORE\
+5. pip install -r .\requirements.txt
 6. create file local_setting.py <br/>
    ```
    #local_setting.py
@@ -17,10 +17,9 @@ Follow commends in cmd
    ```
 
 7. py .\manage.py makemigrations
-8. py .\manage.py migrate
-9. pre-commit install
-10. py .\manage.py runserver
-11. Go to http://127.0.0.1:8000/ to check that everything is fine
+8. py .\manage.py migrate --run-syncdb
+9. py .\manage.py runserver
+10. Go to http://127.0.0.1:8000/ to check that everything is fine
 
 ##Hints
 
