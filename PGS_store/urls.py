@@ -1,5 +1,4 @@
 from django.contrib import admin
-from events.admin import event_admin_site
 
 from django.urls import path, include
 
@@ -9,8 +8,7 @@ from django.conf.urls.static import static
 from product.views import *
 
 urlpatterns = [
-    path("entity-admin/", admin.site.urls),
-    path("event-admin/", event_admin_site.urls),
+    path("admin/", admin.site.urls),
     path("", index, name="home"),
     path("category/<id>/", category),
     path("product/<id>/", product),
