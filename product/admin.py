@@ -82,7 +82,27 @@ class CartItem(admin.ModelAdmin):
             elif value == "Finished":
                 return queryset.filter(state="Finished")
 
-    list_filter = (StateFilter,)
+    class CitiFilter(admin.SimpleListFilter):
+        title = "city"
+        parameter_name = "city"
+
+        def lookups(self, request, model_admin):
+            return (
+                ("Wroclaw", "Wroclaw"),
+                ("Gdansk", "Gdansk"),
+                ("Rzeszow", "Rzeszow"),
+            )
+
+        def queryset(self, request, queryset):
+            value = self.value()
+            if value == "Wroclaw":
+                return queryset.filter(product__city__shortcut="WRO")
+            elif value == "Gdansk":
+                return queryset.filter(product__city__shortcut="GDA")
+            elif value == "Rzeszow":
+                return queryset.filter(product__city__shortcut="RZE")
+
+    list_filter = (StateFilter, CitiFilter)
 
 
 admin.site.register(Producer)
