@@ -7,12 +7,12 @@ from django.utils.safestring import mark_safe
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("title", "quantity", "price", "add_up", "image_thumbnail")
     readonly_fields = ["image_thumbnail"]
-    actions = ["add_1", "subtruck_1"]
+    actions = ["add_1", "subtrack_1"]
 
     def add_up(self, obj):
         return obj.price * obj.quantity
 
-    def subtruck_1(self, request, queryset):
+    def subtrack_1(self, request, queryset):
         for obj in queryset:
             obj.quantity = obj.quantity - 1
             obj.save()
