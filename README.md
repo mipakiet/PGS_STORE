@@ -1,8 +1,8 @@
-#PGS_STORE
+# PGS_STORE
 Web App for selling stuff for employees.</br>
 Making with Django 3 framework with python 3.7 and Bootstrap 5 library.
 
-##Installation
+## Installation
 Follow commends in cmd
 1. python3 -m venv ./venv
 2. .\venv\Scripts\activate
@@ -22,7 +22,7 @@ Follow commends in cmd
 9. py .\manage.py runserver
 10. Go to http://127.0.0.1:8000/ to check that everything is fine
 
-##Hints
+## Hints
 
 - create admin account via 'python manage.py createsuperuser'
 
