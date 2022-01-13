@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import *
 from django.utils.safestring import mark_safe
+from django.contrib.admin import AdminSite
 
 
 @admin.register(Product)
@@ -27,7 +28,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 @admin.register(CartItem)
-class CartItem(admin.ModelAdmin):
+class CartItemAdmin(admin.ModelAdmin):
     list_display = (
         "product",
         "get_state",
@@ -109,3 +110,14 @@ admin.site.register(Producer)
 admin.site.register(Category)
 admin.site.register(Computer)
 admin.site.register(City)
+
+
+class SmallAdminSite(AdminSite):
+    site_header = "PGS Admin"
+    site_title = "PGS Admin Portal"
+    index_title = "Welcome to PGS Admin Portal"
+
+
+small_admin_site = SmallAdminSite(name="small_admin")
+small_admin_site.register(Product, ProductAdmin)
+small_admin_site.register(CartItem, CartItemAdmin)
