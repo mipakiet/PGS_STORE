@@ -47,7 +47,10 @@
       <div class="col-lg-3">
         <div class="mx-3 bg-light h-100 p-4">
           <p class="fs-3">{{price_for_everything}}zł</p>
-          <button class="btn btn-primary text-white  btn-lg" type="submit">Kupuje!</button>
+            <form action="" method="POST">
+              {% csrf_token %}
+              <button class="btn btn-primary text-white  btn-lg" type="submit" name="buy" value="T">Kupuje!</button>
+            </form>
         </div>
       </div>
     </div>

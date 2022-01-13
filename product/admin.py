@@ -30,13 +30,15 @@ class ProductAdmin(admin.ModelAdmin):
 class CartItem(admin.ModelAdmin):
     list_display = (
         "product",
+        "get_state",
+        "city",
         "quantity",
         "user",
         "price_for_one",
         "price_for_all",
         "image_thumbnail",
     )
-    actions = ["close"]
+    actions = ["finish"]
 
     def price_for_one(self, obj):
         return obj.product.price
@@ -44,16 +46,43 @@ class CartItem(admin.ModelAdmin):
     def price_for_all(self, obj):
         return obj.quantity * obj.product.price
 
+    def city(self, obj):
+        return obj.product.city
+
+    def get_state(self, obj):
+        return obj.state
+
     def image_thumbnail(self, obj):
         return mark_safe(
             f'<img src="{obj.product.image.url}" width="150" height="100" />'
         )
 
-    def close(self, request, queryset):
+    def finish(self, request, queryset):
         for obj in queryset:
-            obj.product.quantity -= obj.quantity
-            obj.product.save()
-            obj.delete()
+            obj.state = "Finished"
+            obj.save()
+
+    class StateFilter(admin.SimpleListFilter):
+        title = "state"
+        parameter_name = "state"
+
+        def lookups(self, request, model_admin):
+            return (
+                ("In cart", "In cart"),
+                ("Bought", "Bought"),
+                ("Finished", "Finished"),
+            )
+
+        def queryset(self, request, queryset):
+            value = self.value()
+            if value == "In cart":
+                return queryset.filter(state="In cart")
+            elif value == "Bought":
+                return queryset.filter(state="Bought")
+            elif value == "Finished":
+                return queryset.filter(state="Finished")
+
+    list_filter = (StateFilter,)
 
 
 admin.site.register(Producer)
