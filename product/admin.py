@@ -12,6 +12,9 @@ class CitiFilter(admin.SimpleListFilter):
         return (("WRO", "Wroclaw"), ("GDA", "Gdansk"), ("RZE", "Rzeszow"))
 
     def queryset(self, request, queryset):
+
+        if not queryset:
+            return queryset
         value = self.value()
         if value:
             if isinstance(queryset[0], CartItem):
