@@ -4,11 +4,64 @@ from django.utils.safestring import mark_safe
 from django.contrib.admin import AdminSite
 
 
+class CitiFilter(admin.SimpleListFilter):
+    title = "city"
+    parameter_name = "city"
+
+    def lookups(self, request, model_admin):
+        return (("WRO", "Wroclaw"), ("GDA", "Gdansk"), ("RZE", "Rzeszow"))
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value:
+            if isinstance(queryset[0], CartItem):
+                return queryset.filter(product__city__shortcut=value)
+            elif isinstance(queryset[0], Product):
+                return queryset.filter(city__shortcut=value)
+        else:
+            return queryset
+
+
+class StateFilter(admin.SimpleListFilter):
+    title = "state"
+    parameter_name = "state"
+
+    def lookups(self, request, model_admin):
+        return (("In cart", "In cart"), ("Bought", "Bought"), ("Finished", "Finished"))
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value:
+            return queryset.filter(state=value)
+        else:
+            return queryset
+
+
+class CategoryFilter(admin.SimpleListFilter):
+    title = "category"
+    parameter_name = "category"
+
+    def lookups(self, request, model_admin):
+        queryset = Category.objects.all()
+        categories = []
+        for obj in queryset:
+            categories.append((obj.id, obj.name))
+        return categories
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value:
+            return queryset.filter(product__category=value)
+        else:
+            return queryset
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("title", "quantity", "price", "add_up", "image_thumbnail")
+    list_display = ("title", "city", "quantity", "price", "add_up", "image_thumbnail")
     readonly_fields = ["image_thumbnail"]
     actions = ["add_1", "subtrack_1"]
+    list_filter = ("category", CitiFilter)
 
     def add_up(self, obj):
         return obj.price * obj.quantity
@@ -40,6 +93,7 @@ class CartItemAdmin(admin.ModelAdmin):
         "image_thumbnail",
     )
     actions = ["finish"]
+    list_filter = (StateFilter, CitiFilter, CategoryFilter)
 
     def price_for_one(self, obj):
         return obj.product.price
@@ -62,48 +116,6 @@ class CartItemAdmin(admin.ModelAdmin):
         for obj in queryset:
             obj.state = "Finished"
             obj.save()
-
-    class StateFilter(admin.SimpleListFilter):
-        title = "state"
-        parameter_name = "state"
-
-        def lookups(self, request, model_admin):
-            return (
-                ("In cart", "In cart"),
-                ("Bought", "Bought"),
-                ("Finished", "Finished"),
-            )
-
-        def queryset(self, request, queryset):
-            value = self.value()
-            if value == "In cart":
-                return queryset.filter(state="In cart")
-            elif value == "Bought":
-                return queryset.filter(state="Bought")
-            elif value == "Finished":
-                return queryset.filter(state="Finished")
-
-    class CitiFilter(admin.SimpleListFilter):
-        title = "city"
-        parameter_name = "city"
-
-        def lookups(self, request, model_admin):
-            return (
-                ("Wroclaw", "Wroclaw"),
-                ("Gdansk", "Gdansk"),
-                ("Rzeszow", "Rzeszow"),
-            )
-
-        def queryset(self, request, queryset):
-            value = self.value()
-            if value == "Wroclaw":
-                return queryset.filter(product__city__shortcut="WRO")
-            elif value == "Gdansk":
-                return queryset.filter(product__city__shortcut="GDA")
-            elif value == "Rzeszow":
-                return queryset.filter(product__city__shortcut="RZE")
-
-    list_filter = (StateFilter, CitiFilter)
 
 
 admin.site.register(Producer)
