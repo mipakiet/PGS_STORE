@@ -15,7 +15,9 @@
                     <p class="fs-4 ">{{product_object.price}} zł</p>
                     <p class="fs-6 ">
                         Dostępne sztuki - {{product_object.quantity}}<br/>
+                        {% if in_cart != 0 %}
                         W koszyku - {{in_cart}}
+                        {% endif %}
                     </p>
                 </div>
                 <div class="position-relative">

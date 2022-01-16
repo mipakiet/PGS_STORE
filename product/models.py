@@ -33,7 +33,6 @@ class City(models.Model):
 
 
 class Product(models.Model):
-
     title = models.CharField(max_length=25)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -61,3 +60,7 @@ class CartItem(models.Model):
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.DecimalField(max_digits=1000, decimal_places=0, default=0)
+
+    State = [("In cart", 1), ("Bought", 2), ("Finished", 3)]
+
+    state = models.CharField(choices=State, default="In cart", max_length=10)

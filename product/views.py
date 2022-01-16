@@ -90,16 +90,18 @@ def product(request, id):
         product_object = []
 
     try:
-        in_cart = CartItem.objects.get(
-            user=request.user, product=product_object
-        ).quantity
+        in_cart = (
+            CartItem.objects.filter(state="In cart")
+            .get(user=request.user, product=product_object)
+            .quantity
+        )
     except:
         in_cart = 0
 
     if request.POST.get("counter"):
         if product_object.quantity >= int(request.POST.get("counter")) + in_cart:
             try:
-                cart_object = CartItem.objects.get(
+                cart_object = CartItem.objects.filter(state="In cart").get(
                     user=request.user, product=product_object
                 )
                 cart_object.quantity += int(request.POST.get("counter"))
@@ -137,8 +139,16 @@ def cart(request):
         print(request.POST.get("cart_object_id"))
         CartItem.objects.get(pk=request.POST.get("cart_object_id")).delete()
 
+    if request.POST.get("buy"):
+        for item in CartItem.objects.filter(user=request.user).filter(state="In cart"):
+            print(item)
+            item.state = "Bought"
+            item.save()
+            item.product.quantity -= item.quantity
+            item.product.save()
+
     try:
-        cart_object = CartItem.objects.filter(user=request.user)
+        cart_object = CartItem.objects.filter(user=request.user).filter(state="In cart")
     except:
         cart_object = []
 
