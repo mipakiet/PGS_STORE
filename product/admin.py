@@ -4,7 +4,7 @@ from django.utils.safestring import mark_safe
 from django.contrib.admin import AdminSite
 
 
-class CitiFilter(admin.SimpleListFilter):
+class CityFilter(admin.SimpleListFilter):
     title = "city"
     parameter_name = "city"
 
@@ -64,7 +64,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ("title", "city", "quantity", "price", "add_up", "image_thumbnail")
     readonly_fields = ["image_thumbnail"]
     actions = ["add_1", "subtrack_1"]
-    list_filter = ("category", CitiFilter)
+    list_filter = ("category", CityFilter)
 
     def add_up(self, obj):
         return obj.price * obj.quantity
@@ -96,7 +96,7 @@ class CartItemAdmin(admin.ModelAdmin):
         "image_thumbnail",
     )
     actions = ["finish"]
-    list_filter = (StateFilter, CitiFilter, CategoryFilter)
+    list_filter = (StateFilter, CityFilter, CategoryFilter)
 
     def price_for_one(self, obj):
         return obj.product.price
