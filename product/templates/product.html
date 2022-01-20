@@ -42,7 +42,7 @@
         <div class="row mt-3 fs-3">
             <p>{{product_object.description}}</p>
             <table class="table">
-              <tbody id="placeholder">
+              <tbody id="tableBody">
 
               </tbody>
             </table>
@@ -59,7 +59,7 @@
         const json = JSON.parse(str);
         for(var key in json){
             var row = "<tr><td>" + key + "</td><td>" + json[key] + "</td></tr>";
-            document.getElementById('placeholder').innerHTML += row;
+            document.getElementById('tableBody').innerHTML += row;
         }
 
     </script>
