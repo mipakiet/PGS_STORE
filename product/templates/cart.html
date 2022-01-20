@@ -1,60 +1,84 @@
 {% extends "base.html" %}
 {% block content %}
-
-  <div class="container">
-
-    <div class="row ">
-      <h1>Twój koszyk:</h1>
-    </div>
-    <div class="row ">
-      <div class="col-lg-9 bg-light py-3">
-        {%if objects %}
-        {% for product_object, cart_object, price in objects %}
-        <div class="container product_list py-3">
-          <a class="text-decoration-none text-dark" href="/product/{{product_object.id}}">
-            <div class="row">
-              <div class="col-2">
-                  <img class="img-list" src="{{product_object.image.url}}" alt="" style="object-fit: fill;" width="125" height="100">
-              </div>
-              <div class="col-4">
-                <span class="fs-2">{{product_object.title}}</span>
-                <p>{{product_object.price}} zł</p>
-              </div>
-              <div class="col-2">
-                <div class="m-3 p-3 fs-5">Ilość: {{cart_object.quantity}}</div>
-              </div>
-              <div class="col-2">
-                <div class="m-3 p-3 fs-5">{{price}}zł</div>
-              </div>
-              <div class="col-2">
-                <form action="" method="POST">
-                  {% csrf_token %}
-                  <button class="btn btn-primary text-white btn-lg m-3 py-3 w-100 fs-5" type="submit" name='cart_object_id' value='{{cart_object.id}}'>Usun</button>
-                </form>
-              </div>
+<div class="container h-100 d-inline-block">
+  <div class="row mt-3 h-100 ">
+    <div class="col-8 bg-light p-3 rounded-3">
+      <h2>Twój koszyk</h2>
+      <div class="border border-bottom border-1 rounded-3"></div>
+      {%if objects %}
+      {% for product_object, cart_object, price in objects %}
+      <div class="container product_list py-3">
+        <a class="text-decoration-none text-dark" href="/product/{{product_object.id}}">
+          <div class="row">
+            <div class="col-2">
+              <img class="img-list" src="{{product_object.image.url}}" alt="" style="object-fit: fill;" width="125" height="100">
             </div>
-          </a>
-        </div>
-        {% if not forloop.last %}
-          <div class="border border-bottom border-1 rounded-3"></div>
-        {% endif %}
-        {% endfor %}
-        {% else %}
-          <p>Nie masz nic w koszyku</p>
-        {% endif %}
-      </div>
+            <div class="col-5">
+              <span class="fs-4">{{product_object.title}}</span>
+              <div class="">{{cart_object.quantity}} szt.</div>
+            </div>
+            <div class="col-4 d-flex align-items-center">
+              <div class="h-auto w-100 text-end">
+                <span class="fs-4 ">{{price}} zł</span>
+                {% if cart_object.quantity > 1%}
+                <br/>
+                <span class="fs-8">{{product_object.price}} zł za szt.</span>
+                {% endif %}
+                </div>
+            </div>
+            <div class="col-1 position-relative">
+              <form action="" method="POST">
+                {% csrf_token %}
+                <button class="delete_button position-absolute top-50 start-50 translate-middle" type="submit" name='cart_object_id' value='{{cart_object.id}}'>
+                  <i class="material-icons" style=" font-size: 48px; ">&#xe872;</i>
+                </button>
 
-      <div class="col-lg-3">
-        <div class="mx-3 bg-light h-100 p-4">
-          <p class="fs-3">{{price_for_everything}}zł</p>
-            <form action="" method="POST">
-              {% csrf_token %}
+              </form>
+            </div>
+          </div>
+        </a>
+      </div>
+      {% if not forloop.last %}
+      <div class="border border-bottom border-1 rounded-3"></div>
+      {% endif %}
+      {% endfor %}
+      {% else %}
+      <p class="text-center p-3">Nie masz nic w koszyku</p>
+      {% endif %}
+    </div>
+    <div class="col-4">
+      <div class="container bg-light p-3 h-100">
+        <h2>Dane</h2>
+        <div class="border border-bottom border-1 rounded-3 mb-2"></div>
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class="row p-0 m-0 mb-3">
+            <label for="firstName" class="form-label p-0">Imię</label>
+            <input type="text" class="form-control" id="firstName" placeholder="Jan" required>
+          </div>
+          <div class="row p-0 m-0 mb-3">
+            <label for="secondName" class="form-label p-0">Nazwisko</label>
+            <input type="text" class="form-control" id="secondName" placeholder="Kowalski" required>
+          </div>
+          <div class="row p-0 m-0 mb-3">
+            <label for="address" class="form-label p-0">Adres</label>
+            <input type="text" class="form-control" id="address" placeholder="Sucha 3, 50-086 Wrocław" required>
+          </div>
+          <div class="row p-0 m-0 mb-3">
+            <label for="nip" class="form-label p-0">NIP (jesli na firme)</label>
+            <input type="text" class="form-control" id="nip" placeholder="1234567890" pattern="[0-9]{10}">
+          </div>
+          <div class="row pt-3">
+            <div class="col-6">
+              <p class="fs-3">{{price_for_everything}}zł</p>
+            </div>
+            <div class="col-6 text-end">
               <button class="btn btn-primary text-white  btn-lg" type="submit" name="buy" value="T">Kupuje!</button>
-            </form>
-        </div>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-  <div class="mt-3"></div>
-
+</div>
 {% endblock %}

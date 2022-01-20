@@ -146,6 +146,12 @@ def cart(request):
             item.save()
             item.product.quantity -= item.quantity
             item.product.save()
+        messages.success(
+            request,
+            (
+                f"Twój zakup jest w trakcie realizacji. Poczekaj jak admin się do Ciebie odezwie."
+            ),
+        )
 
     try:
         cart_object = CartItem.objects.filter(user=request.user).filter(state="In cart")
