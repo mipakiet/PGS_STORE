@@ -1,79 +1,75 @@
 {% extends "base.html" %}
 {% block content %}
-
-	<div class="container">
-    <div class="row mt-3">
-      <h1>Twój koszyk:</h1>
-      <div class="col-8 bg-light p-3">
-        {%if objects %}
-        {% for product_object, cart_object, price in objects %}
-        <div class="container product_list py-3">
-          <a class="text-decoration-none text-dark" href="/product/{{product_object.id}}">
-            <div class="row">
-              <div class="col-2">
-                  <img class="img-list" src="{{product_object.image.url}}" alt="" style="object-fit: fill;" width="125" height="100">
-              </div>
-              <div class="col-4">
-                <span class="fs-2">{{product_object.title}}</span>
-                <p>{{product_object.price}} zł</p>
-              </div>
-              <div class="col-2">
-                <div class="m-3 p-3 fs-5">Ilość: {{cart_object.quantity}}</div>
-              </div>
-              <div class="col-2">
-                <div class="m-3 p-3 fs-5">{{price}}zł</div>
-              </div>
-              <div class="col-2">
-                <form action="" method="POST">
-                  {% csrf_token %}
-                  <button class="btn btn-primary text-white btn-lg m-3 py-3 w-100 fs-5" type="submit" name='cart_object_id' value='{{cart_object.id}}'>Usuń</button>
-                </form>
-              </div>
+<div class="container">
+  <div class="row mt-3">
+    <h1>Twój koszyk:</h1>
+    <div class="col-8 bg-light p-3">
+      {%if objects %}
+      {% for product_object, cart_object, price in objects %}
+      <div class="container product_list py-3">
+        <a class="text-decoration-none text-dark" href="/product/{{product_object.id}}">
+          <div class="row">
+            <div class="col-2">
+              <img class="img-list" src="{{product_object.image.url}}" alt="" style="object-fit: fill;" width="125" height="100">
             </div>
-          </a>
-        </div>
-          {% if not forloop.last %}
-          <div class="border border-bottom border-1 rounded-3"></div>
-          {% endif %}
-        {% endfor %}
-        {% else %}
-          <p class="text-center p-3">Nie masz nic w koszyku</p>
-        {% endif %}
+            <div class="col-4">
+              <span class="fs-2">{{product_object.title}}</span>
+              <p>{{product_object.price}} zł</p>
+            </div>
+            <div class="col-2">
+              <div class="m-3 p-3 fs-5">Ilość: {{cart_object.quantity}}</div>
+            </div>
+            <div class="col-2">
+              <div class="m-3 p-3 fs-5">{{price}}zł</div>
+            </div>
+            <div class="col-2">
+              <form action="" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-primary text-white btn-lg m-3 py-3 w-100 fs-5" type="submit" name='cart_object_id' value='{{cart_object.id}}'>Usuń</button>
+              </form>
+            </div>
+          </div>
+        </a>
       </div>
-        <div class="col-4">
-				<div class="container bg-light p-3 h-100">
-					<form action="" method="POST">
-						{% csrf_token %}
-						<div class="row p-0 m-0 mb-3">
-							<label for="inputEmail4" class="form-label p-0">Imię</label>
-							<input type="email" class="form-control" id="inputEmail4">
-						</div>
-						<div class="row p-0 m-0 mb-3">
-							<label for="inputPassword4" class="form-label p-0">Nazwisko</label>
-							<input type="text" class="form-control" id="inputPassword4">
-						</div>
-						<div class="row p-0 m-0 mb-3">
-							<label for="inputAddress" class="form-label p-0">Adres</label>
-							<input type="text" class="form-control" id="inputAddress" placeholder="np. Sucha 3, 50-086 Wrocław">
-						</div>
-						<div class="row p-0 m-0 mb-3">
-							<label for="inputCity" class="form-label p-0">NIP (jesli na firme)</label>
-							<input type="text" class="form-control" id="inputCity">
-						</div>
-						<div class="row">
-							<div class="col-6">
-								<p class="fs-3">{{price_for_everything}}zł</p>
-							</div>
-							<div class="col-6 text-end">
-								<button class="btn btn-primary text-white  btn-lg" type="submit" name="buy" value="T">Kupuje!</button>
-							</div>
-						</div>
-
-
-					</form>
-				</div>
-			</div>
+      {% if not forloop.last %}
+      <div class="border border-bottom border-1 rounded-3"></div>
+      {% endif %}
+      {% endfor %}
+      {% else %}
+      <p class="text-center p-3">Nie masz nic w koszyku</p>
+      {% endif %}
+    </div>
+    <div class="col-4">
+      <div class="container bg-light p-3 h-100">
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class="row p-0 m-0 mb-3">
+            <label for="firstName" class="form-label p-0">Imię</label>
+            <input type="text" class="form-control" id="firstName" placeholder="Jan" required>
+          </div>
+          <div class="row p-0 m-0 mb-3">
+            <label for="secondName" class="form-label p-0">Nazwisko</label>
+            <input type="text" class="form-control" id="secondName" placeholder="Kowalski" required>
+          </div>
+          <div class="row p-0 m-0 mb-3">
+            <label for="address" class="form-label p-0">Adres</label>
+            <input type="text" class="form-control" id="address" placeholder="np. Sucha 3, 50-086 Wrocław" required>
+          </div>
+          <div class="row p-0 m-0 mb-3">
+            <label for="nip" class="form-label p-0">NIP (jesli na firme)</label>
+            <input type="text" class="form-control" id="nip" placeholder="1234567890" pattern="[0-9]{10}">
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <p class="fs-3">{{price_for_everything}}zł</p>
+            </div>
+            <div class="col-6 text-end">
+              <button class="btn btn-primary text-white  btn-lg" type="submit" name="buy" value="T">Kupuje!</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-
+</div>
 {% endblock %}
