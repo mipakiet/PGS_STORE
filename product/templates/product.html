@@ -56,9 +56,7 @@
         var str = "{{product_object.spec}}";
         str = str.replace(new RegExp("&"+"#"+"x27;", "g"), "\"");
 
-        console.log(str);
         const json = JSON.parse(str);
-        console.log(json);
         for(var key in json){
             var row = "<tr><td>" + key + "</td><td>" + json[key] + "</td></tr>";
             document.getElementById('placeholder').innerHTML += row;
