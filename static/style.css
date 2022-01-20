@@ -47,3 +47,13 @@
 .center:hover  + img{
     opacity: 1;
 }
+
+.delete_button{
+    border: 0;
+    color: #fd7e14;
+    background-color: transparent;
+}
+
+.delete_button:hover{
+    color: #faa157;
+}
