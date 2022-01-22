@@ -2,14 +2,14 @@
 {% block content %}
 
 
-    <div class="container bg-light p-4">
+    <div class="container bg-light p-5">
 
         {%if product_object %}
-        <div class="row">
-            <div class="col-6">
-                <img class="img-thumbnail" src="{{product_object.image.url}}" alt="">
+        <div class="row m-0 p-0">
+            <div class="col-6 text-center">
+                <img src="{{product_object.image.url}}" alt="" style="height:350px; max-width: 100%; ">
             </div>
-            <div class="col-6">
+            <div class="col-6 m-0 p-0">
                 <div class="container h-100 m-0 p-0">
                     <p class="fs-1">{{product_object.title}}</p>
                     <p class="fs-4">{{product_object.city}}</p>
@@ -20,9 +20,7 @@
                         W koszyku - {{in_cart}}
                         {% endif %}
                     </p>
-                </div>
-                <div class="position-relative">
-                    <div class="position-absolute bottom-0 start-0">
+                    <div class="">
                         <form action="" method="POST">
                             {% csrf_token %}
                             <div class='my-3'>
@@ -39,9 +37,11 @@
                 </div>
             </div>
         </div>
-        <div class="row mt-3 fs-3">
-            <p>{{product_object.description}}</p>
-            <table class="table">
+        <div class="row fs-3 p-0 m-0">
+            <div class="border border-bottom border-bottom border-3 rounded-3 my-3"></div>
+            {{product_object.description}}
+            <div class="border border-bottom border-3 rounded-3 my-3"></div>
+            <table class="table m-0 p-0">
               <tbody id="tableBody">
 
               </tbody>
