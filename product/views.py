@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from django.views.decorators.csrf import csrf_protect
 from .models import Product, Category, CartItem
 from django.contrib import messages
+from cart.cart import Cart
 
 
 def index(request):
@@ -118,7 +119,7 @@ def product(request, id):
             messages.success(
                 request,
                 (
-                    f"Dodano do koszyka {request.POST.get('counter')} {product_object.title}"
+                    f"Dodano do koszyka {request.POST.get('counter')} {product_object.name}"
                 ),
             )
         else:
@@ -163,9 +164,47 @@ def cart(request):
     objects = []
     for cart in cart_object:
         product = Product.objects.get(id=cart.product.id)
-        objects.append((product, cart, product.price * cart.quantity))
-        price_for_everything += product.price * cart.quantity
+        objects.append((product, cart, float(product.price) * int(cart.quantity)))
+        price_for_everything += float(product.price) * int(cart.quantity)
 
     context = {"objects": objects, "price_for_everything": price_for_everything}
 
     return render(request, "cart.html", context)
+
+
+def cart_add(request, id):
+    cart = Cart(request)
+    product = Product.objects.get(id=id)
+    cart.add(product=product)
+    return redirect("home")
+
+
+def item_clear(request, id):
+    cart = Cart(request)
+    product = Product.objects.get(id=id)
+    cart.remove(product)
+    return redirect("cart_detail")
+
+
+def item_increment(request, id):
+    cart = Cart(request)
+    product = Product.objects.get(id=id)
+    cart.add(product=product)
+    return redirect("cart_detail")
+
+
+def item_decrement(request, id):
+    cart = Cart(request)
+    product = Product.objects.get(id=id)
+    cart.decrement(product=product)
+    return redirect("cart_detail")
+
+
+def cart_clear(request):
+    cart = Cart(request)
+    cart.clear()
+    return redirect("cart_detail")
+
+
+def cart_detail(request):
+    return render(request, "cart/cart_detail.html")

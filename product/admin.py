@@ -61,7 +61,7 @@ class CategoryFilter(admin.SimpleListFilter):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("title", "city", "quantity", "price", "add_up", "image_thumbnail")
+    list_display = ("name", "city", "quantity", "price", "add_up", "image_thumbnail")
     readonly_fields = ["image_thumbnail"]
     actions = ["add_1", "subtrack_1"]
     list_filter = ("category", CityFilter)
