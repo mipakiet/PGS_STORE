@@ -66,13 +66,13 @@ class Cart(object):
             del self.cart[product_id]
             self.save()
 
-    def decrement(self, product):
+    def decrement(self, product, quantity):
         for key, value in self.cart.items():
             if key == str(product.id):
 
-                value["quantity"] = value["quantity"] - 1
+                value["quantity"] = value["quantity"] - quantity
                 if value["quantity"] < 1:
-                    return redirect("cart:cart_detail")
+                    self.remove(product)
                 self.save()
                 break
             else:

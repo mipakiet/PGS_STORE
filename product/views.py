@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Product, Category
 from django.contrib import messages
 from django.conf import settings
+from cart.models import Cart
 
 
 def index(request):
@@ -106,9 +107,17 @@ def cart(request):
 
     print(request.session.get(settings.CART_SESSION_ID))
     price_for_everything = 0
-
     if request.session.get(settings.CART_SESSION_ID):
         for key, item in request.session.get(settings.CART_SESSION_ID).items():
+            if Product.objects.get(id=item["product_id"]).quantity < item["quantity"]:
+
+                cart_obj = Cart(request)
+                product_obj = Product.objects.get(id=item["product_id"])
+                cart_obj.decrement(product=product_obj, quantity=item["product_id"])
+                messages.success(
+                    request, (f"Produkt który miałeś w koszyku został kupiony  :(")
+                )
+
             price_for_everything += int(item["quantity"]) * int(
                 Product.objects.get(id=item["product_id"]).price
             )

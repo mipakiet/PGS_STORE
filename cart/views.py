@@ -19,12 +19,15 @@ def cart_add(request, id):
     except:
         in_cart = 0
 
-    if quantity > Product.objects.get(id=id).quantity - in_cart:
+    product = Product.objects.get(id=id)
+
+    if quantity > product.quantity - in_cart:
         messages.success(request, (f"Nie możesz dodać tylu produktów do koszyka"))
         return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
+    messages.success(request, (f"Dodano {quantity} {product.name} do koszyka"))
+
     cart = Cart(request)
-    product = Product.objects.get(id=id)
     cart.add(product=product, quantity=quantity)
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
