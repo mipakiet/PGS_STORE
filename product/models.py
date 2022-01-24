@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django_jsonform.models.fields import JSONField
 
 
 class Producer(models.Model):
@@ -45,6 +46,20 @@ class Product(models.Model):
     )
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True)
     quantity = models.DecimalField(max_digits=1000, decimal_places=0, default=0)
+
+    SPEC_SCHEMA = {
+        "type": "dict",
+        "keys": {
+            "Model": {"type": "string"},
+            "Procesor": {"type": "string"},
+            "RAM": {"type": "string", "choices": ["8GB", "16GB", "24GB", "32GB"]},
+            "KartaGraficzna": {"type": "string"},
+            "Dysk": {"type": "string"},
+            "Uwagi": {"type": "string"},
+        },
+    }
+
+    spec = JSONField(schema=SPEC_SCHEMA, null=True)
 
     def __str__(self):
         return self.title

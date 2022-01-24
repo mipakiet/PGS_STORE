@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
+
     <div class="container bg-light p-4">
 
         {%if product_object %}
@@ -40,10 +41,26 @@
         </div>
         <div class="row mt-3 fs-3">
             <p>{{product_object.description}}</p>
+            <table class="table">
+              <tbody id="tableBody">
+
+              </tbody>
+            </table>
         </div>
         {% else %}
         <p>Nie znaleziono produktu 404 :</p>
         {% endif %}
     </div>
 
+    <script>
+        var str = "{{product_object.spec}}";
+        str = str.replace(new RegExp("&"+"#"+"x27;", "g"), "\"");
+
+        const json = JSON.parse(str);
+        for(var key in json){
+            var row = "<tr><td>" + key + "</td><td>" + json[key] + "</td></tr>";
+            document.getElementById('tableBody').innerHTML += row;
+        }
+
+    </script>
 {% endblock %}
