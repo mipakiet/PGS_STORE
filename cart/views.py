@@ -29,13 +29,6 @@ def cart_add(request, id):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
-# def cart_add(request, id, quan):
-#     cart = Cart(request)
-#     product = Product.objects.get(id=id)
-#     cart.add(product=product, quantity=quan)
-#     return redirect("home")
-
-
 def item_clear(request, id):
     cart = Cart(request)
     product = Product.objects.get(id=id)
@@ -43,25 +36,7 @@ def item_clear(request, id):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
-def item_increment(request, id):
-    cart = Cart(request)
-    product = Product.objects.get(id=id)
-    cart.add(product=product)
-    return redirect("cart_detail")
-
-
-def item_decrement(request, id):
-    cart = Cart(request)
-    product = Product.objects.get(id=id)
-    cart.decrement(product=product)
-    return redirect("cart_detail")
-
-
 def cart_clear(request):
     cart = Cart(request)
     cart.clear()
     return redirect("cart_detail")
-
-
-def cart_detail(request):
-    return render(request, "cart/cart_detail.html")
