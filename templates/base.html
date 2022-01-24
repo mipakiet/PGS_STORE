@@ -25,28 +25,12 @@
                     <img src="{% static '/pgslogo.png' %}" alt="" style="height: 100px; width: auto;">
                 </a>
             </div>
-            <div class="col text-end">
-                <div class="container m-3">
-                    {% if user.is_authenticated %}
-                    <div class="btn-group mt-3">
-                      <button type="button" class="btn btn-primary text-white dropdown-toggle btn-lg" data-bs-toggle="dropdown" aria-expanded="false">
-                          {{user.username}}
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'cart' %}">Koszyk</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'logout_user' %}">Wyloguj się</a></li>
-                      </ul>
-                    </div>
-
-                    {% else %}
-                    <a href="{% url 'login_user' %}">
-                    <button type="submit" class="btn btn-primary text-white btn-lg mt-3">
-                        Zaloguj się
+            <div class="col text-end position-relative">
+                <form action="{% url 'cart' %}" class=" position-absolute top-50 end-0 translate-middle-y">
+                    <button class="delete_button" type="submit">
+                        <i class="material-icons" style=" font-size: 48px; ">&#xf1cc;</i>
                     </button>
-                    </a>
-                    {% endif %}
-                </div>
+                </form>
             </div>
         </div>
         <div class="row px-3">

@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     "django_jsonform",
     "cart",
     "product",
-    "members",
 ]
 
 MIDDLEWARE = [

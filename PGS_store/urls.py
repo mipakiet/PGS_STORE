@@ -17,8 +17,6 @@ urlpatterns = (
         path("category/<id>/", category),
         path("product/<id>/", product, name="product"),
         path("cart/", cart, name="cart"),
-        path("members/", include("members.urls")),
-        path("members/", include("django.contrib.auth.urls")),
         path("__debug__/", include("debug_toolbar.urls")),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
