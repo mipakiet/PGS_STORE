@@ -54,7 +54,7 @@ class Product(models.Model):
     spec = JSONField(schema=SPEC_SCHEMA, null=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
 class Computer(Product):

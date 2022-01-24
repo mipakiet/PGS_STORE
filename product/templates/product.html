@@ -11,7 +11,7 @@
             </div>
             <div class="col-6 m-0 p-0">
                 <div class="container h-100 m-0 p-0">
-                    <p class="fs-1">{{product_object.title}}</p>
+                    <p class="fs-1">{{product_object.name}}</p>
                     <p class="fs-4">{{product_object.city}}</p>
                     <p class="fs-4 ">{{product_object.price}} zł</p>
                     <p class="fs-6 ">
@@ -21,10 +21,9 @@
                         {% endif %}
                     </p>
                     <div class="">
-                        <form action="" method="POST">
-                            {% csrf_token %}
+                        <form action="{% url 'cart_add' product_object.id%}" method="GET" id="buyForm">
                             <div class='my-3'>
-                                <input class="form-control" name='counter' type="number" value='1'>
+                                <input class="form-control" name='counter' type="number" value='1' id="buyQuantity">
                             </div>
                             {% if user.is_authenticated %}
                             <button class="btn btn-primary text-white w-100" type="submit">Doadaj do koszyka</button>
@@ -34,6 +33,12 @@
 
                         </form>
                     </div>
+                    <script>
+                        $('#buyForm').submit(function(){
+                        var quantity = $('#buyQuantity').val();
+                        $(this).attr('action', $(this).attr('action').replace( "0", quantity));
+                        });
+                    </script>
                 </div>
             </div>
         </div>
