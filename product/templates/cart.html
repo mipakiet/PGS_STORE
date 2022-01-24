@@ -8,7 +8,7 @@
       {%if request.session.cart.items %}
       {% for key,value in request.session.cart.items %}
       <div class="container product_list py-3">
-        <a class="text-decoration-none text-dark" href="/product/{{product_object.id}}">
+        <a class="text-decoration-none text-dark" href="/product/{{value.product_id}}">
           <div class="row">
             <div class="col-2">
               <img class="img-list" src="{{value.image}}" alt="" style="object-fit: fill;" width="125" height="100">

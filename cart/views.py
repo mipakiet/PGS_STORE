@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from product.models import Product
 from .models import Cart
+from django.http import HttpResponseRedirect
 
 
 def cart_add(request, id):
@@ -11,7 +12,7 @@ def cart_add(request, id):
     cart = Cart(request)
     product = Product.objects.get(id=id)
     cart.add(product=product, quantity=quantity)
-    return redirect("home")
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
 # def cart_add(request, id, quan):

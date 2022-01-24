@@ -15,7 +15,7 @@ urlpatterns = (
         path("small-admin/", small_admin_site.urls),
         path("", index, name="home"),
         path("category/<id>/", category),
-        path("product/<id>/", product),
+        path("product/<id>/", product, name="product"),
         path("cart/", cart, name="cart"),
         path("members/", include("members.urls")),
         path("members/", include("django.contrib.auth.urls")),
