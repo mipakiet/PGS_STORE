@@ -25,11 +25,7 @@
                             <div class='my-3'>
                                 <input class="form-control" name='counter' type="number" value='1' id="buyQuantity">
                             </div>
-                            {% if user.is_authenticated %}
                             <button class="btn btn-primary text-white w-100" type="submit">Doadaj do koszyka</button>
-                            {% else %}
-                            <button class="btn btn-primary text-white w-100" type="submit" disabled>Zaloguj sie aby dodać do koszyka</button>
-                            {% endif %}
 
                         </form>
                     </div>
@@ -63,8 +59,10 @@
 
         const json = JSON.parse(str);
         for(var key in json){
-            var row = "<tr><td>" + key + "</td><td>" + json[key] + "</td></tr>";
-            document.getElementById('tableBody').innerHTML += row;
+            if(json[key] != ""){
+                var row = "<tr><td>" + key + "</td><td>" + json[key] + "</td></tr>";
+                document.getElementById('tableBody').innerHTML += row;
+            }
         }
 
     </script>

@@ -20,17 +20,16 @@
             <div class="col-4 d-flex align-items-center">
               <div class="h-auto w-100 text-end">
                 {% load cart_tag %}
-                <span class="fs-4 ">{{value.price|multiply:value.quantity}} zł</span>
+                <span class="fs-4 ">{{value.price|multiply:value.quantity}}zł</span>
                 {% if value.quantity > 1%}
                 <br/>
-                <span class="fs-8">{{value.price}} zł za szt.</span>
+                <span class="fs-8">{{value.price}}zł za szt.</span>
                 {% endif %}
                 </div>
             </div>
             <div class="col-1 position-relative">
-              <form action="" method="POST">
-                {% csrf_token %}
-                <button class="delete_button position-absolute top-50 start-50 translate-middle" type="submit" name='cart_object_id' value='{{cart_object.id}}'>
+              <form action="{% url 'item_clear' value.product_id %}">
+                <button class="delete_button position-absolute top-50 start-50 translate-middle" type="submit">
                   <i class="material-icons" style=" font-size: 48px; ">&#xe872;</i>
                 </button>
 

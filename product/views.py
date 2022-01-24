@@ -104,12 +104,14 @@ def product(request, id):
 
 def cart(request):
 
+    print(request.session.get(settings.CART_SESSION_ID))
     price_for_everything = 0
 
-    for key, item in request.session.get(settings.CART_SESSION_ID).items():
-        price_for_everything += int(item["quantity"]) * int(
-            Product.objects.get(id=item["product_id"]).price
-        )
+    if request.session.get(settings.CART_SESSION_ID):
+        for key, item in request.session.get(settings.CART_SESSION_ID).items():
+            price_for_everything += int(item["quantity"]) * int(
+                Product.objects.get(id=item["product_id"]).price
+            )
 
     context = {"price_for_everything": price_for_everything}
 
