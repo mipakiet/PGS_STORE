@@ -55,19 +55,3 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class Computer(Product):
-    ram = models.DecimalField(max_digits=6, decimal_places=0)
-
-
-class CartItem(models.Model):
-    product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, null=True, blank=True
-    )
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    quantity = models.DecimalField(max_digits=1000, decimal_places=0, default=0)
-
-    State = [("In cart", 1), ("Bought", 2), ("Finished", 3)]
-
-    state = models.CharField(choices=State, default="In cart", max_length=10)

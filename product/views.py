@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Product, Category, CartItem
+from .models import Product, Category
 from django.contrib import messages
 
 
