@@ -48,12 +48,12 @@
     opacity: 1;
 }
 
-.delete_button{
+.orange_button{
     border: 0;
     color: #fd7e14;
     background-color: transparent;
 }
 
-.delete_button:hover{
+.orange_button:hover{
     color: #faa157;
 }

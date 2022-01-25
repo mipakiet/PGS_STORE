@@ -1,8 +1,8 @@
 from django.shortcuts import render
-
-from django.views.decorators.csrf import csrf_protect
-from .models import Product, Category, CartItem
+from .models import Product, Category
 from django.contrib import messages
+from django.conf import settings
+from cart.models import Cart
 
 
 def index(request):
@@ -71,10 +71,10 @@ def category(request, id):
             product_objects = product_objects.order_by("-price")
             context["order"] = 2
         if request.GET.get("order") == "3":
-            product_objects = product_objects.order_by("title")
+            product_objects = product_objects.order_by("name")
             context["order"] = 3
         if request.GET.get("order") == "4":
-            product_objects = product_objects.order_by("-title")
+            product_objects = product_objects.order_by("-name")
             context["order"] = 4
 
     context["product_objects"] = product_objects
@@ -90,39 +90,9 @@ def product(request, id):
         product_object = []
 
     try:
-        in_cart = (
-            CartItem.objects.filter(state="In cart")
-            .get(user=request.user, product=product_object)
-            .quantity
-        )
+        in_cart = request.session.get(settings.CART_SESSION_ID)[id]["quantity"]
     except:
         in_cart = 0
-
-    if request.POST.get("counter"):
-        if product_object.quantity >= int(request.POST.get("counter")) + in_cart:
-            try:
-                cart_object = CartItem.objects.filter(state="In cart").get(
-                    user=request.user, product=product_object
-                )
-                cart_object.quantity += int(request.POST.get("counter"))
-                cart_object.save()
-
-            except:
-                cart_object = CartItem(
-                    product=product_object,
-                    user=request.user,
-                    quantity=request.POST.get("counter"),
-                )
-                cart_object.save()
-            in_cart += int(request.POST.get("counter"))
-            messages.success(
-                request,
-                (
-                    f"Dodano do koszyka {request.POST.get('counter')} {product_object.title}"
-                ),
-            )
-        else:
-            messages.success(request, (f"Nie możesz dodać takiej ilości produktu"))
 
     category_object = Category.objects.all()
     context = {
@@ -135,37 +105,23 @@ def product(request, id):
 
 def cart(request):
 
-    if request.POST.get("cart_object_id"):
-        print(request.POST.get("cart_object_id"))
-        CartItem.objects.get(pk=request.POST.get("cart_object_id")).delete()
-
-    if request.POST.get("buy"):
-        for item in CartItem.objects.filter(user=request.user).filter(state="In cart"):
-            print(item)
-            item.state = "Bought"
-            item.save()
-            item.product.quantity -= item.quantity
-            item.product.save()
-        messages.success(
-            request,
-            (
-                f"Twój zakup jest w trakcie realizacji. Poczekaj jak admin się do Ciebie odezwie."
-            ),
-        )
-
-    try:
-        cart_object = CartItem.objects.filter(user=request.user).filter(state="In cart")
-    except:
-        cart_object = []
-
+    print(request.session.get(settings.CART_SESSION_ID))
     price_for_everything = 0
+    if request.session.get(settings.CART_SESSION_ID):
+        for key, item in request.session.get(settings.CART_SESSION_ID).items():
+            if Product.objects.get(id=item["product_id"]).quantity < item["quantity"]:
 
-    objects = []
-    for cart in cart_object:
-        product = Product.objects.get(id=cart.product.id)
-        objects.append((product, cart, product.price * cart.quantity))
-        price_for_everything += product.price * cart.quantity
+                cart_obj = Cart(request)
+                product_obj = Product.objects.get(id=item["product_id"])
+                cart_obj.decrement(product=product_obj, quantity=item["product_id"])
+                messages.success(
+                    request, (f"Produkt który miałeś w koszyku został kupiony  :(")
+                )
 
-    context = {"objects": objects, "price_for_everything": price_for_everything}
+            price_for_everything += int(item["quantity"]) * int(
+                Product.objects.get(id=item["product_id"]).price
+            )
+
+    context = {"price_for_everything": price_for_everything}
 
     return render(request, "cart.html", context)

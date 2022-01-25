@@ -28,8 +28,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "debug_toolbar",
     "django_jsonform",
+    "cart",
     "product",
-    "members",
 ]
 
 MIDDLEWARE = [
@@ -120,3 +120,6 @@ try:
     from local_settings import *
 except ImportError:
     raise Exception("A local_settings.py file is required")
+
+
+CART_SESSION_ID = "cart"
