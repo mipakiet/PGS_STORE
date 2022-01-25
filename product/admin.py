@@ -17,22 +17,10 @@ class CityFilter(admin.SimpleListFilter):
             return queryset
         value = self.value()
         if value:
-            return queryset.filter(city__shortcut=value)
-        else:
-            return queryset
-
-
-class StateFilter(admin.SimpleListFilter):
-    title = "state"
-    parameter_name = "state"
-
-    def lookups(self, request, model_admin):
-        return (("In cart", "In cart"), ("Bought", "Bought"), ("Finished", "Finished"))
-
-    def queryset(self, request, queryset):
-        value = self.value()
-        if value:
-            return queryset.filter(state=value)
+            if isinstance(queryset[0], CartItem):
+                return queryset.filter(product__city__shortcut=value)
+            elif isinstance(queryset[0], Product):
+                return queryset.filter(city__shortcut=value)
         else:
             return queryset
 
@@ -78,6 +66,34 @@ class ProductAdmin(admin.ModelAdmin):
 
     def image_thumbnail(self, obj):
         return mark_safe(f'<img src="{obj.image.url}" width="150" height="100" />')
+
+
+@admin.register(CartItem)
+class CartItemAdmin(admin.ModelAdmin):
+    list_display = (
+        "image_thumbnail",
+        "city",
+        "order_date",
+        "employee_name",
+        "address",
+        "nip",
+        "company_name",
+        "quantity",
+        "price",
+        "price_for_all",
+    )
+    list_filter = (CityFilter, CategoryFilter)
+
+    def price_for_all(self, obj):
+        return obj.quantity * obj.price
+
+    def city(self, obj):
+        return obj.product.city
+
+    def image_thumbnail(self, obj):
+        return mark_safe(
+            f'<img src="{obj.product.image.url}" width="150" height="100" />'
+        )
 
 
 admin.site.register(Category)

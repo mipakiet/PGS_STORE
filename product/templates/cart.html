@@ -50,33 +50,37 @@
       <div class="container bg-light p-3 h-100">
         <h2>Dane</h2>
         <div class="border border-bottom border-1 rounded-3 mb-2"></div>
-        <form action="" method="POST">
-          {% csrf_token %}
+        <form action="{% url 'buy'%}" method="GET">
           <div class="row p-0 m-0 mb-3">
-            <label for="firstName" class="form-label p-0">Imię</label>
-            <input type="text" class="form-control" id="firstName" placeholder="Jan" required>
+            <label for="firstName" class="form-label p-0">Imię*</label>
+            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Jan" required>
           </div>
           <div class="row p-0 m-0 mb-3">
-            <label for="secondName" class="form-label p-0">Nazwisko</label>
-            <input type="text" class="form-control" id="secondName" placeholder="Kowalski" required>
+            <label for="secondName" class="form-label p-0">Nazwisko*</label>
+            <input type="text" class="form-control" id="secondName" name="secondName" placeholder="Kowalski" required>
           </div>
           <div class="row p-0 m-0 mb-3">
-            <label for="address" class="form-label p-0">Adres</label>
-            <input type="text" class="form-control" id="address" placeholder="Sucha 3, 50-086 Wrocław" required>
+            <label for="address" class="form-label p-0">Adres*</label>
+            <input type="text" class="form-control" id="address" name="address" placeholder="Sucha 3, 50-086 Wrocław" required>
           </div>
           <div class="row p-0 m-0 mb-3">
-            <label for="nip" class="form-label p-0">NIP (jesli na firme)</label>
-            <input type="text" class="form-control" id="nip" placeholder="1234567890" pattern="[0-9]{10}">
+            <label for="company_name" class="form-label p-0">Nazwa firmy</label>
+            <input type="text" class="form-control" id="company_name" name="company_name" placeholder="PGS Software">
           </div>
+          <div class="row p-0 m-0 mb-3">
+            <label for="nip" class="form-label p-0">NIP</label>
+            <input type="text" class="form-control" id="nip" name="nip" placeholder="1234567890" pattern="[0-9]{10}">
+          </div>
+          <span class="fw-light" style="font-size:14px;">*pola wymagane</span>
           <div class="row pt-3">
             <div class="col-6">
               <p class="fs-3">{{price_for_everything}}zł</p>
             </div>
             <div class="col-6 text-end">
-              <button class="btn btn-primary text-white  btn-lg" type="submit" name="buy" value="T">Kupuje!</button>
+              <input class="btn btn-primary text-white  btn-lg" type="submit" value="Kupuje!">
             </div>
           </div>
-        </form>
+      </form>
       </div>
     </div>
   </div>

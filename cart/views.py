@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from product.models import Product
+from product.models import Product, CartItem
 from .models import Cart
 from django.http import HttpResponseRedirect
 from django.conf import settings
@@ -43,3 +43,55 @@ def cart_clear(request):
     cart = Cart(request)
     cart.clear()
     return redirect("cart_detail")
+
+
+def buy(request):
+
+    if (
+        not request.GET.get("firstName")
+        or not request.GET.get("secondName")
+        or not request.GET.get("address")
+    ):
+        messages.success(request, ("błędne dane do zakupu"))
+        return redirect("cart")
+
+    name = request.GET.get("firstName") + " " + request.GET.get("secondName")
+    address = request.GET.get("address")
+    if request.GET.get("company_name") and request.GET.get("nip"):
+        for key, item in request.session.get(settings.CART_SESSION_ID).items():
+            product = Product.objects.get(id=item["product_id"])
+            product.quantity -= item["quantity"]
+            product.save()
+
+            cart_item = CartItem(
+                employee_name=name,
+                address=address,
+                company_name=request.GET.get("company_name"),
+                nip=request.GET.get("nip"),
+                product=Product.objects.get(id=item["product_id"]),
+                quantity=item["quantity"],
+                price=item["price"],
+            )
+            cart_item.save()
+
+            cart = Cart(request)
+            cart.clear()
+    else:
+        for key, item in request.session.get(settings.CART_SESSION_ID).items():
+            product = Product.objects.get(id=item["product_id"])
+            product.quantity -= item["quantity"]
+            product.save()
+
+            cart_item = CartItem(
+                employee_name=name,
+                address=address,
+                product=Product.objects.get(id=item["product_id"]),
+                quantity=item["quantity"],
+                price=item["price"],
+            )
+            cart_item.save()
+
+            cart = Cart(request)
+            cart.clear()
+
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
