@@ -1,5 +1,4 @@
 from django.contrib import admin
-from product.admin import small_admin_site
 
 from django.urls import path, include
 
@@ -12,7 +11,6 @@ from cart.urls import cart_urlpatterns
 urlpatterns = (
     [
         path("admin/", admin.site.urls),
-        path("small-admin/", small_admin_site.urls),
         path("", index, name="home"),
         path("category/<id>/", category),
         path("product/<id>/", product, name="product"),

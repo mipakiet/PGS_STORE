@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import *
 from django.utils.safestring import mark_safe
-from django.contrib.admin import AdminSite
+from datetime import date
+from django.contrib import messages
 
 
 class CityFilter(admin.SimpleListFilter):
@@ -34,6 +35,7 @@ class CategoryFilter(admin.SimpleListFilter):
         categories = []
         for obj in queryset:
             categories.append((obj.id, obj.name))
+        print(categories)
         return categories
 
     def queryset(self, request, queryset):
@@ -44,14 +46,57 @@ class CategoryFilter(admin.SimpleListFilter):
             return queryset
 
 
+class ReleasedFilter(admin.SimpleListFilter):
+    title = "released"
+    parameter_name = "released"
+
+    def lookups(self, request, model_admin):
+        return ((True, "Yes"), (False, "No"))
+
+    def queryset(self, request, queryset):
+
+        if not queryset:
+            return queryset
+        value = self.value()
+        if value is not None:
+            return queryset.filter(released=value)
+        else:
+            return queryset
+
+
+class BillFilter(admin.SimpleListFilter):
+    title = "bill"
+    parameter_name = "bill"
+
+    def lookups(self, request, model_admin):
+        return ((True, "Yes"), (False, "No"))
+
+    def queryset(self, request, queryset):
+
+        if not queryset:
+            return queryset
+        value = self.value()
+        if value is not None:
+            return queryset.filter(bill=value)
+        else:
+            return queryset
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("name", "city", "quantity", "price", "add_up", "image_thumbnail")
+    list_display = (
+        "image_thumbnail",
+        "name",
+        "city",
+        "quantity",
+        "price",
+        "price_for_all",
+    )
     readonly_fields = ["image_thumbnail"]
     actions = ["add_1", "subtrack_1"]
     list_filter = ("category", CityFilter)
 
-    def add_up(self, obj):
+    def price_for_all(self, obj):
         return obj.price * obj.quantity
 
     def subtrack_1(self, request, queryset):
@@ -72,8 +117,11 @@ class ProductAdmin(admin.ModelAdmin):
 class CartItemAdmin(admin.ModelAdmin):
     list_display = (
         "image_thumbnail",
-        "city",
         "order_date",
+        "bill",
+        "released",
+        "released_date",
+        "city",
         "employee_name",
         "address",
         "nip",
@@ -82,7 +130,8 @@ class CartItemAdmin(admin.ModelAdmin):
         "price",
         "price_for_all",
     )
-    list_filter = (CityFilter, CategoryFilter)
+    list_filter = (CityFilter, CategoryFilter, ReleasedFilter, BillFilter)
+    actions = ["release", "bill", "cancel"]
 
     def price_for_all(self, obj):
         return obj.quantity * obj.price
@@ -95,16 +144,30 @@ class CartItemAdmin(admin.ModelAdmin):
             f'<img src="{obj.product.image.url}" width="150" height="100" />'
         )
 
+    def release(self, request, queryset):
+        for obj in queryset:
+            obj.released_date = date.today()
+            obj.released = True
+            obj.save()
+
+    def bill(self, request, queryset):
+        for obj in queryset:
+            obj.bill = True
+            obj.save()
+
+    def cancel(self, request, queryset):
+        for obj in queryset:
+            if obj.released or obj.bill:
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    f"{obj.product.name} ma wystawiona fakture albo jest wydany. Nie możesz go usunąć",
+                )
+            else:
+                obj.product.quantity += obj.quantity
+                obj.product.save()
+                obj.delete()
+
 
 admin.site.register(Category)
 admin.site.register(City)
-
-
-class SmallAdminSite(AdminSite):
-    site_header = "PGS Admin"
-    site_title = "PGS Admin Portal"
-    index_title = "Welcome to PGS Admin Portal"
-
-
-small_admin_site = SmallAdminSite(name="small_admin")
-small_admin_site.register(Product, ProductAdmin)

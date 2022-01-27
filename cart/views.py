@@ -6,11 +6,11 @@ from django.conf import settings
 from django.contrib import messages
 
 
-def cart_add(request, id):
+def cart_add(request, id, quan=1):
     if request.GET.get("counter"):
         quantity = int(request.GET["counter"])
     else:
-        quantity = 1
+        quantity = quan
 
     try:
         in_cart = int(

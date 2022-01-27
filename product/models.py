@@ -66,3 +66,7 @@ class CartItem(models.Model):
     quantity = models.IntegerField()
     price = models.DecimalField(decimal_places=2, max_digits=7)
     order_date = models.DateField(auto_now_add=True)
+
+    bill = models.BooleanField(default=False)
+    released = models.BooleanField(default=False)
+    released_date = models.DateField(null=True)
