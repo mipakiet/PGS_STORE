@@ -35,7 +35,6 @@ class CategoryFilter(admin.SimpleListFilter):
         categories = []
         for obj in queryset:
             categories.append((obj.id, obj.name))
-        print(categories)
         return categories
 
     def queryset(self, request, queryset):
