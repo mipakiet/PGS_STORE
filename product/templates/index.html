@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="container">
-    <div class="row">
+  <div class="container p-0">
+    <div class="row p-0" style="margin-left: -16px;">
     {%if category_object %}
     {% for object in category_object %}
-      <div class="col col-xxl-4">
+      <div class="col p-0 m-0">
         <a href="/category/{{object.id}}">
-        <div class="category_card m-3" style="width:400px; height: 300px;">
-          <div class="center fs-1">{{object.name}}</div>
-          <img class="w-100 h-100" src="media/{{object.image}}" alt="{{object.image}}">
-        </div>
+          <div class="category_card m-3" style="height: 300px; min-width:400px">
+            <div class="center fs-1">{{object.name}}</div>
+            <img class="w-100 h-100" src="media/{{object.image}}" alt="{{object.image}}">
+          </div>
         </a>
       </div>
     {% endfor %}

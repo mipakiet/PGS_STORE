@@ -1,12 +1,15 @@
 from django import template
+import re
 
 register = template.Library()
 
 
 @register.filter
 def multiply(value, arg):
-    result = str(float(value) * arg)
-    return result + "0"
+    result = str(round((float(value) * arg), 2))
+    if re.search("\.[0-9]$", result):
+        result += "0"
+    return result
 
 
 @register.filter

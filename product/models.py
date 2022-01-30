@@ -28,7 +28,7 @@ class City(models.Model):
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     price = models.DecimalField(decimal_places=2, max_digits=7)
     image = models.ImageField(upload_to="products/")
     category = models.ForeignKey(

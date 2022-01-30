@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 
-  <div class="container">
-    <div class="row ">
-      <div class="col-sm-3">
+  <div class="container p-0 h-100">
+    <div class="row m-0 p-0 h-100">
+      <div class="col-md-12 col-xl-3 ps-0">
         <div class="container bg-light p-4 h-100">
           <form action="" method="GET">
 
@@ -83,18 +83,18 @@
           </form>
         </div>
       </div>
-      <div class="col-lg-9 bg-light py-3">
+      <div class="col-md-12 col-xl-9 bg-light py-3">
         {%if product_objects %}
         {% for object in product_objects %}
 
         <div class="container product_list py-3">
           <a class="text-decoration-none text-dark" href="/product/{{object.id}}">
             <div class="row">
-              <div class="col-4">
-                  <img class="img-list" src="{{object.image.url}}" alt="" style="object-fit: fill;" width="250" height="200">
+              <div class="col-4 p-0 d-flex justify-content-center">
+                  <img class="img-list" src="{{object.image.url}}" alt="" style="object-fit: fill;" height="200">
               </div>
               <div class="col-8 ">
-                <span class="fs-2">{{object.title}}</span>
+                <span class="fs-2">{{object.name}}</span>
                 <div class="overflow-hidden" style="height: 70px;">{{object.description}}</div>
                 <div class="row mt-5">
                   <div class="col-6">
@@ -107,17 +107,34 @@
               </div>
             </div>
           </a>
+
         </div>
         {% if not forloop.last %}
           <div class="border border-bottom border-1 rounded-3"></div>
         {% endif %}
         {% endfor %}
+        <nav aria-label="Page navigation example" class="pb-0">
+          <ul class="pagination mb-0 mt-2 justify-content-center">
+            <li class="page-item">
+              <a class="page-link text-black" href="#" aria-label="Previous">
+                Poprzednia
+              </a>
+            </li>
+            <li class="page-item"><a class="page-link text-black" href="#">1</a></li>
+            <li class="page-item"><a class="page-link text-black" href="#">2</a></li>
+            <li class="page-item"><a class="page-link text-black" href="#">3</a></li>
+            <li class="page-item">
+              <a class="page-link text-black" href="#" aria-label="Next">
+                Następna
+              </a>
+            </li>
+          </ul>
+        </nav>
         {% else %}
-          <p>Nie ma produktów na sprzedaż w tej kategorii :(</p>
+          <p class="text-center mt-3">Nie ma produktów na sprzedaż w tej kategorii :(</p>
         {% endif %}
       </div>
     </div>
   </div>
-  <div class="mt-3"></div>
 
 {% endblock %}

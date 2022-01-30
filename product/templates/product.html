@@ -1,9 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-
-
     <div class="container bg-light p-5">
-
         {%if product_object %}
         <div class="row m-0 p-0">
             <div class="col-6 text-center">
@@ -39,10 +36,12 @@
             </div>
         </div>
         <div class="row fs-3 p-0 m-0">
-            <div class="border border-bottom border-bottom border-3 rounded-3 my-3"></div>
-            {{product_object.description}}
+            {% if product_object.description %}
+                <div class="border border-bottom border-bottom border-3 rounded-3 my-3"></div>
+                {{product_object.description}}
+            {% endif %}
             <div class="border border-bottom border-3 rounded-3 my-3"></div>
-            <table class="table m-0 p-0">
+            <table class="table table-striped table-hover m-0 p-0">
               <tbody id="tableBody">
 
               </tbody>
@@ -60,7 +59,7 @@
         const json = JSON.parse(str);
         for(var key in json){
             if(json[key] != ""){
-                var row = "<tr><td>" + key + "</td><td>" + json[key] + "</td></tr>";
+                var row = "<tr><td style='width:50%'>" + key + "</td><td style='width:50%'>" + json[key] + "</td></tr>";
                 document.getElementById('tableBody').innerHTML += row;
             }
         }
