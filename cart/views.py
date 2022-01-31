@@ -80,7 +80,16 @@ def buy(request):
 
     name = request.GET.get("firstName") + " " + request.GET.get("secondName")
     address = request.GET.get("address")
+
+    context = {
+        "name": name,
+        "address": address,
+        "cart": request.session.get(settings.CART_SESSION_ID),
+    }
+
     if request.GET.get("company_name") and request.GET.get("nip"):
+        context["company_name"] = request.GET.get("company_name")
+        context["nip"] = request.GET.get("nip")
         for key, item in request.session.get(settings.CART_SESSION_ID).items():
             product = Product.objects.get(id=item["product_id"])
             product.quantity -= item["quantity"]
@@ -97,8 +106,6 @@ def buy(request):
             )
             cart_item.save()
 
-            cart = Cart(request)
-            cart.clear()
     else:
         for key, item in request.session.get(settings.CART_SESSION_ID).items():
             product = Product.objects.get(id=item["product_id"])
@@ -114,7 +121,11 @@ def buy(request):
             )
             cart_item.save()
 
-            cart = Cart(request)
-            cart.clear()
+    cart = Cart(request)
+    cart.clear()
 
-    return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
+    return render(request, "summary.html", context)
+
+
+def summary(request):
+    return render(request, "summary.html")
