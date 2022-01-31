@@ -2,51 +2,53 @@
 {% block content %}
 <div class="container p-0 h-100">
   <div class="row m-0 p-0 h-100">
-    <div class="col-md-12 col-xl-8 bg-light p-3 rounded-3">
-      <h2>Twój koszyk</h2>
-      <div class="border border-bottom border-1 rounded-3"></div>
-      {%if request.session.cart.items %}
-      {% for key,value in request.session.cart.items %}
-      <div class="container product_list py-3">
-        <a class="text-decoration-none text-dark" href="/product/{{value.product_id}}">
-          <div class="row">
-            <div class="col-2">
-              <img class="img-list" src="{{value.image}}" alt="" style="object-fit: fill;" width="125" height="100">
-            </div>
-            <div class="col-5">
-              <span class="fs-4">{{value.name}}</span>
-              <div class="">{{value.quantity}} szt.</div>
-            </div>
-            <div class="col-4 d-flex align-items-center">
-              <div class="h-auto w-100 text-end">
-                {% load cart_tag %}
-                <span class="fs-4 ">{{value.price|multiply:value.quantity}}zł</span>
-                {% if value.quantity > 1%}
-                <br/>
-                <span class="fs-8">{{value.price}}zł za szt.</span>
-                {% endif %}
-                </div>
-            </div>
-            <div class="col-1 position-relative">
-              <form action="{% url 'item_clear' value.product_id %}">
-                <button class="orange_button position-absolute top-50 start-50 translate-middle" type="submit">
-                  <i class="material-icons" style=" font-size: 48px; ">&#xe872;</i>
-                </button>
+    <div class="col-md-12 col-xl-8">
+      <div class="container bg-light p-3 h-100">
+        <h2>Twój koszyk</h2>
+        <div class="border border-bottom border-1 rounded-3"></div>
+        {%if request.session.cart.items %}
+        {% for key,value in request.session.cart.items %}
+        <div class="container product_list py-3">
+          <a class="text-decoration-none text-dark" href="/product/{{value.product_id}}">
+            <div class="row">
+              <div class="col-2">
+                <img class="img-list" src="{{value.image}}" alt="" style="object-fit: fill;" width="125" height="100">
+              </div>
+              <div class="col-5">
+                <span class="fs-4">{{value.name}}</span>
+                <div class="">{{value.quantity}} szt.</div>
+              </div>
+              <div class="col-4 d-flex align-items-center">
+                <div class="h-auto w-100 text-end">
+                  {% load cart_tag %}
+                  <span class="fs-4 ">{{value.price|multiply:value.quantity}}zł</span>
+                  {% if value.quantity > 1%}
+                  <br/>
+                  <span class="fs-8">{{value.price}}zł za szt.</span>
+                  {% endif %}
+                  </div>
+              </div>
+              <div class="col-1 position-relative">
+                <form action="{% url 'item_clear' value.product_id %}">
+                  <button class="orange_button position-absolute top-50 start-50 translate-middle" type="submit">
+                    <i class="material-icons" style=" font-size: 48px; ">&#xe872;</i>
+                  </button>
 
-              </form>
+                </form>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
+        </div>
+        {% if not forloop.last %}
+        <div class="border border-bottom border-1 rounded-3"></div>
+        {% endif %}
+        {% endfor %}
+        {% else %}
+        <p class="text-center p-3">Nie masz nic w koszyku</p>
+        {% endif %}
       </div>
-      {% if not forloop.last %}
-      <div class="border border-bottom border-1 rounded-3"></div>
-      {% endif %}
-      {% endfor %}
-      {% else %}
-      <p class="text-center p-3">Nie masz nic w koszyku</p>
-      {% endif %}
     </div>
-    <div class="col-md-12 col-xl-4 ">
+    <div class="col-md-12 col-xl-4">
       <div class="container bg-light p-3 h-100">
         <h2>Dane</h2>
         <div class="border border-bottom border-1 rounded-3 mb-2"></div>

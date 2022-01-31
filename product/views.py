@@ -79,7 +79,7 @@ def category(request, id):
 
     context["product_objects"] = product_objects
 
-    return render(request, "list.html", context)
+    return render(request, "category.html", context)
 
 
 def product(request, id):
@@ -90,7 +90,7 @@ def product(request, id):
         product_object = []
 
     try:
-        in_cart = request.session.get(settings.CART_SESSION_ID)[id]["quantity"]
+        in_cart = request.session.get(settings.CART_SESSION_ID)[str(id)]["quantity"]
     except:
         in_cart = 0
 

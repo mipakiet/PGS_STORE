@@ -12,8 +12,8 @@ urlpatterns = (
     [
         path("admin/", admin.site.urls),
         path("", index, name="home"),
-        path("category/<id>/", category),
-        path("product/<id>/", product, name="product"),
+        path("category/<int:id>/", category, name="category"),
+        path("product/<int:id>/", product, name="product"),
         path("cart/", cart, name="cart"),
         path("__debug__/", include("debug_toolbar.urls")),
     ]
