@@ -27,7 +27,7 @@ class City(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=30)
     description = models.TextField(null=True, blank=True)
     price = models.DecimalField(decimal_places=2, max_digits=7)
     image = models.ImageField(upload_to="products/")
@@ -35,7 +35,7 @@ class Product(models.Model):
         Category, on_delete=models.CASCADE, null=True, blank=True
     )
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True)
-    quantity = models.DecimalField(max_digits=1000, decimal_places=0, default=0)
+    quantity = models.PositiveIntegerField(default=0)
 
     SPEC_SCHEMA = {
         "type": "dict",
