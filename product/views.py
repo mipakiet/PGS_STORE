@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .models import Product, Category
 from django.contrib import messages
 from django.conf import settings
-from cart.models import Cart
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 def index(request):
@@ -77,7 +77,20 @@ def category(request, id):
             product_objects = product_objects.order_by("-name")
             context["order"] = 4
 
-    context["product_objects"] = product_objects
+    paginator = Paginator(product_objects, 15)
+
+    page = request.GET.get("page")
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    context["page_obj"] = page_obj
+
+    print(request.get_full_path)
+    print(type(request))
 
     return render(request, "category.html", context)
 
