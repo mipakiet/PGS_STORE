@@ -6,6 +6,29 @@ from django.conf import settings
 from django.contrib import messages
 
 
+def cart(request):
+
+    price_for_everything = 0
+    if request.session.get(settings.CART_SESSION_ID):
+        for key, item in request.session.get(settings.CART_SESSION_ID).items():
+            product = Product.objects.get(id=item["product_id"])
+            if product.quantity < item["quantity"]:
+
+                cart_obj = Cart(request)
+                cart_obj.decrement(
+                    product=product, quantity=item["product_id"] - product.quantity
+                )
+                messages.success(
+                    request, (f"Produkt który miałeś w koszyku został kupiony  :(")
+                )
+
+            price_for_everything += int(item["quantity"]) * int(product.price)
+
+    context = {"price_for_everything": price_for_everything}
+
+    return render(request, "cart.html", context)
+
+
 def cart_add(request, id, quan=1):
     if request.GET.get("counter"):
         quantity = int(request.GET["counter"])
