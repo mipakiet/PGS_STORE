@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+{% load product_tag %}
 
   <div class="container h-100">
     <div class="row h-100">
@@ -92,17 +93,23 @@
             <a class="text-decoration-none text-dark" href="/product/{{object.id}}">
               <div class="row">
                 <div class="col-4 p-0 d-flex justify-content-center">
-                    <img class="img-list" src="{{object.image.url}}" alt="" style="object-fit: fill;" height="200">
+                    <img class="img-list" src="{{object.image.url}}" alt="" style="object-fit: fill;" height="210" width="280">
                 </div>
                 <div class="col-8 ">
-                  <span class="fs-2">{{object.name}}</span>
-                  <div class="overflow-hidden" style="height: 70px;">{{object.description}}</div>
-                  <div class="row mt-5">
-                    <div class="col-6">
-                      <p>{{object.city}}</p>
+                  <div class="container m-0 p-0 h-100 d-flex flex-column">
+                    <div class="row">
+                      <span class="fs-2 mb-0">{{object.name}}</span><br/>
+                      <span class="fs-6 mb-0">{{object.city}}</span><br/>
+                      <div><span class="price fs-3">{{object.price|price}}</span><span class="price fs-5">,{{object.price|price:False}} zł</span></div>
+
                     </div>
-                    <div class="col-6">
-                      <p class="text-end fs-6"><strong>{{object.price}} zł</strong></p>
+                    <div class="row mt-auto" >
+                      <div class="col col-6">
+
+                      </div>
+                      <div class="col col-6 text-end text-muted ">
+                        {{object.quantity}} sztuk
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -114,8 +121,7 @@
             <div class="border border-bottom border-1 rounded-3"></div>
           {% endif %}
           {% endfor %}
-          {% load product_tag %}
-          <nav aria-label="Page navigation example" class="mt-auto">
+          <nav class="mt-auto">
             <ul class="pagination mb-0 mt-2 justify-content-center">
               {%if page_obj.has_previous %}
               <li class="page-item">

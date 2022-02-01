@@ -87,6 +87,8 @@ def buy(request):
         "cart": request.session.get(settings.CART_SESSION_ID),
     }
 
+    price_for_all = 0
+
     if request.GET.get("company_name") and request.GET.get("nip"):
         context["company_name"] = request.GET.get("company_name")
         context["nip"] = request.GET.get("nip")
@@ -94,6 +96,7 @@ def buy(request):
             product = Product.objects.get(id=item["product_id"])
             product.quantity -= item["quantity"]
             product.save()
+            price_for_all += item["quantity"] * product.price
 
             cart_item = CartItem(
                 employee_name=name,
@@ -111,6 +114,7 @@ def buy(request):
             product = Product.objects.get(id=item["product_id"])
             product.quantity -= item["quantity"]
             product.save()
+            price_for_all += item["quantity"] * product.price
 
             cart_item = CartItem(
                 employee_name=name,
@@ -120,6 +124,8 @@ def buy(request):
                 price=item["price"],
             )
             cart_item.save()
+
+    context["price_for_all"] = price_for_all
 
     cart = Cart(request)
     cart.clear()

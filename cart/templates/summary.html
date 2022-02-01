@@ -7,7 +7,6 @@
     <h4 class="text-center">Informacje o twoim zakupie zostały zapisane. Poczekaj aż admin się z tobą skontaktuję.</h4>
     <h1>Dane</h1>
     <div class="border border-bottom border-1 rounded-3 my-2"></div>
-    <h4 class=""></h4>
       <table class="table">
         <tbody>
           <tr>
@@ -54,12 +53,11 @@
                 <div class="">{{value.quantity}} szt.</div>
               </div>
               <div class="col-5 d-flex align-items-center">
-                <div class="h-auto w-100 text-end">
-                  {% load cart_tag %}
-                  <span class="fs-4 ">{{value.price|multiply:value.quantity}}zł</span>
+                <div class="h-auto w-100 text-end  lh-1">
+                  {% load product_tag %}
+                  <span class="price fs-2">{{value.price|multiply:value.quantity|price}}</span><span class="price fs-4">,{{value.price|multiply:value.quantity|price:False}} zł</span><br>
                   {% if value.quantity > 1%}
-                  <br/>
-                  <span class="fs-8">{{value.price}}zł za szt.</span>
+                  <span class="fs-6 text-muted mt-n2">za sztukę {{value.price}} zł</span>
                   {% endif %}
                   </div>
               </div>
@@ -67,9 +65,16 @@
           </a>
       </div>
       {% endfor %}
+      {% if cart|length > 1 %}
+      <h1>Suma</h1>
+      <div class="border border-bottom border-1 rounded-3 my-2"></div>
+      <div class="text-end">
+        <span class="price fs-2">{{price_for_all|price}}</span><span class="price fs-4">,{{price_for_all|price:False}} zł</span>
+      </div>
+      {% endif %}
       <form action="{% url 'home' %}">
         <div class="text-end mt-4 d-flex justify-content-center">
-          <button class="btn btn-primary text-white  btn-lg" type="submit"><span class="px-5">git</span></button>
+          <button class="btn btn-primary text-white  btn-lg" type="submit"><span class="px-5">OK</span></button>
         </div>
       </form>
   </div>

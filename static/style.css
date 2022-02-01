@@ -67,3 +67,8 @@ body {
 .orange_button:hover{
     color: #faa157;
 }
+
+.price{
+    font-family: 'Roboto', sans-serif;
+    color: #3a4e58;
+}
