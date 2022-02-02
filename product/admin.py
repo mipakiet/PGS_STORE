@@ -3,6 +3,8 @@ from .models import *
 from django.utils.safestring import mark_safe
 from datetime import date
 from django.contrib import messages
+from django.contrib.admin.helpers import ActionForm
+from django import forms
 
 
 class CityFilter(admin.SimpleListFilter):
@@ -81,6 +83,10 @@ class BillFilter(admin.SimpleListFilter):
             return queryset
 
 
+class AddSubQuantityForm(ActionForm):
+    quantity = forms.IntegerField()
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
@@ -92,21 +98,24 @@ class ProductAdmin(admin.ModelAdmin):
         "price_for_all",
     )
     readonly_fields = ["image_thumbnail"]
-    actions = ["add_1", "subtrack_1"]
+    actions = ["add_or_subtract"]
+    action_form = AddSubQuantityForm
     list_filter = ("category", CityFilter)
 
     def price_for_all(self, obj):
         return obj.price * obj.quantity
 
-    def subtrack_1(self, request, queryset):
+    def add_or_subtract(self, request, queryset):
         for obj in queryset:
-            obj.quantity = obj.quantity - 1
-            obj.save()
-
-    def add_1(self, request, queryset):
-        for obj in queryset:
-            obj.quantity = obj.quantity + 1
-            obj.save()
+            if obj.quantity + int(request.POST["quantity"]) < 0:
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    f"'{obj.name}' ilość produktu nie może być ujemna",
+                )
+            else:
+                obj.quantity += int(request.POST["quantity"])
+                obj.save()
 
     def image_thumbnail(self, obj):
         return mark_safe(f'<img src="{obj.image.url}" width="150" height="100" />')
