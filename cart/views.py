@@ -6,23 +6,40 @@ from django.conf import settings
 from django.contrib import messages
 
 
-def cart(request):
-
-    price_for_everything = 0
+def check_cart_with_db(request):
     if request.session.get(settings.CART_SESSION_ID):
-        for key, item in request.session.get(settings.CART_SESSION_ID).items():
+        cart_copy = request.session.get(settings.CART_SESSION_ID).copy()
+        for key, item in cart_copy.items():
             product = Product.objects.get(id=item["product_id"])
             if product.quantity < item["quantity"]:
 
                 cart_obj = Cart(request)
                 cart_obj.decrement(
-                    product=product, quantity=item["product_id"] - product.quantity
+                    product=product, quantity=item["quantity"] - product.quantity
                 )
                 messages.success(
-                    request, (f"Produkt który miałeś w koszyku został kupiony  :(")
+                    request,
+                    (
+                        f"Produkt {product.name} który miałeś w koszyku został kupiony  :("
+                    ),
                 )
 
-            price_for_everything += int(item["quantity"]) * int(product.price)
+
+def get_cart_price(request):
+
+    price_for_everything = 0
+    if request.session.get(settings.CART_SESSION_ID):
+        for key, item in request.session.get(settings.CART_SESSION_ID).items():
+            price_for_everything += (
+                Product.objects.get(id=item["product_id"]).price * item["quantity"]
+            )
+    return price_for_everything
+
+
+def cart(request):
+
+    check_cart_with_db(request)
+    price_for_everything = get_cart_price(request)
 
     context = {"price_for_everything": price_for_everything}
 
@@ -87,6 +104,12 @@ def buy(request):
         "cart": request.session.get(settings.CART_SESSION_ID),
     }
 
+    check_cart_with_db(request)
+
+    if len(request.session.get(settings.CART_SESSION_ID)) == 0:
+        messages.success(request, ("Nie masz nic w koszyku"))
+        return redirect("cart")
+
     price_for_all = 0
 
     if request.GET.get("company_name") and request.GET.get("nip"):
@@ -134,4 +157,4 @@ def buy(request):
 
 
 def summary(request):
-    return render(request, "summary.html")
+    return redirect("home")
