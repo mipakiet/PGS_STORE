@@ -55,19 +55,19 @@
         <form action="{% url 'buy'%}" method="GET">
           <div class="row p-0 m-0 mb-3">
             <label for="firstName" class="form-label p-0">Imię*</label>
-            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Jan" required>
+            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Jan" maxlength="30" required>
           </div>
           <div class="row p-0 m-0 mb-3">
             <label for="secondName" class="form-label p-0">Nazwisko*</label>
-            <input type="text" class="form-control" id="secondName" name="secondName" placeholder="Kowalski" required>
+            <input type="text" class="form-control" id="secondName" name="secondName" placeholder="Kowalski" maxlength="30" required>
           </div>
           <div class="row p-0 m-0 mb-3">
             <label for="address" class="form-label p-0">Adres*</label>
-            <input type="text" class="form-control" id="address" name="address" placeholder="Sucha 3, 50-086 Wrocław" required>
+            <input type="text" class="form-control" id="address" name="address" placeholder="Sucha 3, 50-086 Wrocław" maxlength="30" required>
           </div>
           <div class="row p-0 m-0 mb-3">
             <label for="company_name" class="form-label p-0">Nazwa firmy</label>
-            <input type="text" class="form-control" id="company_name" name="company_name" placeholder="PGS Software">
+            <input type="text" class="form-control" id="company_name" name="company_name" placeholder="PGS Software"  maxlength="30">
           </div>
           <div class="row p-0 m-0 mb-3">
             <label for="nip" class="form-label p-0">NIP</label>
