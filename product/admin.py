@@ -84,7 +84,7 @@ class BillFilter(admin.SimpleListFilter):
 
 
 class AddSubQuantityForm(ActionForm):
-    quantity = forms.IntegerField()
+    quantity = forms.IntegerField(required=False)
 
 
 @admin.register(Product)
@@ -98,7 +98,7 @@ class ProductAdmin(admin.ModelAdmin):
         "price_for_all",
     )
     readonly_fields = ["image_thumbnail"]
-    actions = ["add_or_subtract"]
+    actions = ["add_or_subtract", "delete"]
     action_form = AddSubQuantityForm
     list_filter = ("category", CityFilter)
 
@@ -106,6 +106,9 @@ class ProductAdmin(admin.ModelAdmin):
         return obj.price * obj.quantity
 
     def add_or_subtract(self, request, queryset):
+        if not request.POST["quantity"]:
+            messages.add_message(request, messages.ERROR, f"Podaj ilosc")
+            return
         for obj in queryset:
             if obj.quantity + int(request.POST["quantity"]) < 0:
                 messages.add_message(
@@ -116,6 +119,17 @@ class ProductAdmin(admin.ModelAdmin):
             else:
                 obj.quantity += int(request.POST["quantity"])
                 obj.save()
+
+    def delete(self, request, queryset):
+        for obj in queryset:
+            obj.delete()
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+
+        if "delete_selected" in actions:
+            del actions["delete_selected"]
+        return actions
 
     def image_thumbnail(self, obj):
         return mark_safe(f'<img src="{obj.image.url}" width="150" height="100" />')
@@ -175,6 +189,11 @@ class CartItemAdmin(admin.ModelAdmin):
                 obj.product.quantity += obj.quantity
                 obj.product.save()
                 obj.delete()
+
+
+@admin.register(Specification)
+class SpecificationAdmin(admin.ModelAdmin):
+    list_display = ("name",)
 
 
 admin.site.register(Category)

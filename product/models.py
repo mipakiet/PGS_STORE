@@ -26,6 +26,19 @@ class City(models.Model):
         verbose_name_plural = "Cities"
 
 
+class Specification(models.Model):
+    name = models.CharField(max_length=18)
+
+
+def get_schema():
+    SPEC_SCHEMA = {"type": "dict", "keys": {}}
+    spec = Specification.objects.all()
+    for item in spec:
+        SPEC_SCHEMA["keys"][item.name] = {"type": "string"}
+
+    return SPEC_SCHEMA
+
+
 class Product(models.Model):
     name = models.CharField(max_length=30)
     description = models.TextField(null=True, blank=True)
@@ -37,21 +50,7 @@ class Product(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True)
     quantity = models.PositiveIntegerField(default=0)
 
-    SPEC_SCHEMA = {
-        "type": "dict",
-        "keys": {
-            "Model": {"type": "string"},
-            "Procesor": {"type": "string"},
-            "RAM": {"type": "string", "choices": ["8GB", "16GB", "24GB", "32GB"]},
-            "Karta Graficzna": {"type": "string"},
-            "Dysk": {"type": "string"},
-            "Rozmiar": {"type": "string"},
-            "Waga": {"type": "string"},
-            "Uwagi": {"type": "string"},
-        },
-    }
-
-    spec = JSONField(schema=SPEC_SCHEMA, null=True)
+    spec = JSONField(schema=get_schema, null=True)
 
     def __str__(self):
         return self.name
