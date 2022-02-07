@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "debug_toolbar",
     "django_jsonform",
+    "django_cleanup.apps.CleanupConfig",
     "cart",
     "product",
 ]

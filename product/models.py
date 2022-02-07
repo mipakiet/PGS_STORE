@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django_jsonform.models.fields import JSONField
+import os
+from uuid import uuid4
 
 
 class Category(models.Model):
@@ -27,7 +29,10 @@ class City(models.Model):
 
 
 class Specification(models.Model):
-    name = models.CharField(max_length=18)
+    name = models.CharField(max_length=18, unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 def get_schema():
@@ -39,11 +44,25 @@ def get_schema():
     return SPEC_SCHEMA
 
 
+def path_and_rename(instance, filename):
+    upload_to = "products"
+    print(upload_to)
+    ext = filename.split(".")[-1]
+    # get filename
+    if instance.pk:
+        filename = "{}.{}".format(instance.pk, ext)
+    else:
+        # set filename as random string
+        filename = "{}.{}".format(uuid4().hex, ext)
+    # return the whole path to the file
+    return os.path.join(upload_to, filename)
+
+
 class Product(models.Model):
     name = models.CharField(max_length=30)
     description = models.TextField(null=True, blank=True)
     price = models.DecimalField(decimal_places=2, max_digits=7)
-    image = models.ImageField(upload_to="products/")
+    image = models.ImageField(upload_to=path_and_rename)
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, null=True, blank=True
     )
