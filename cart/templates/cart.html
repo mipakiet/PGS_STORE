@@ -54,26 +54,43 @@
         <div class="border border-bottom border-1 rounded-3 mb-2"></div>
         <form action="{% url 'buy'%}" method="GET">
           <div class="row p-0 m-0 mb-3">
-            <label for="firstName" class="form-label p-0">Imię*</label>
+            <label for="firstName" class="form-label p-0">Imię</label>
             <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Jan" maxlength="30" required>
           </div>
           <div class="row p-0 m-0 mb-3">
-            <label for="secondName" class="form-label p-0">Nazwisko*</label>
+            <label for="secondName" class="form-label p-0">Nazwisko</label>
             <input type="text" class="form-control" id="secondName" name="secondName" placeholder="Kowalski" maxlength="30" required>
           </div>
           <div class="row p-0 m-0 mb-3">
-            <label for="address" class="form-label p-0">Adres*</label>
-            <input type="text" class="form-control" id="address" name="address" placeholder="Sucha 3, 50-086 Wrocław" maxlength="30" required>
+            <label for="email" class="form-label p-0">Email PGS</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="jkowalski@pgs-soft.com" maxlength="30" required>
           </div>
-          <div class="row p-0 m-0 mb-3">
-            <label for="company_name" class="form-label p-0">Nazwa firmy</label>
-            <input type="text" class="form-control" id="company_name" name="company_name" placeholder="PGS Software"  maxlength="30">
+          <div id="company_div" style="visibility: hidden; height: 0;">
+            <div class="row p-0 m-0 mb-3">
+              <label for="company_name" class="form-label p-0">Nazwa firmy</label>
+              <input type="text" class="form-control" id="company_name" name="company_name" placeholder="PGS Software"  maxlength="30">
+            </div>
+            <div class="row p-0 m-0 mb-3">
+              <label for="address" class="form-label p-0">Adres</label>
+              <input type="text" class="form-control" id="address" name="address" placeholder="Sucha 3, 50-086 Wrocław" maxlength="30">
+            </div>
+            <div class="row p-0 m-0 mb-3">
+              <label for="nip" class="form-label p-0">NIP</label>
+              <input type="text" class="form-control" id="nip" name="nip" placeholder="1234567890" pattern="[0-9]{10}">
+            </div>
           </div>
-          <div class="row p-0 m-0 mb-3">
-            <label for="nip" class="form-label p-0">NIP</label>
-            <input type="text" class="form-control" id="nip" name="nip" placeholder="1234567890" pattern="[0-9]{10}">
+          <div class="form-check mb">
+            <input class="form-check-input" type="checkbox" id="company" name="company" value="T">
+            <label class="form-check-label" for="company">
+              Na firmę
+            </label>
           </div>
-          <span class="fw-light" style="font-size:14px;">*pola wymagane</span>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="statute" name="statute" value="T" required>
+            <label class="form-check-label" for="statute">
+              Akceptuje <a href="{% url 'statute' %}">regulamin</a>
+            </label>
+          </div>
           <div class="row pt-3">
             <div class="col-6">
               <span class="price fs-2">{{price_for_everything|price}}</span><span class="price fs-4">,{{price_for_everything|price:False}} zł</span><br/>
@@ -91,4 +108,44 @@
     </div>
   </div>
 </div>
+<script>
+  var checkbox = document.getElementById('company');
+
+  var company_name = document.getElementById("company_name");
+  var address = document.getElementById("address");
+  var nip = document.getElementById("nip");
+  var company_div = document.getElementById("company_div");
+  checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+          company_div.style.height = "auto";
+          company_div.style.visibility = 'visible';
+          company_name.required = true;
+          address.required = true;
+          nip.required = true;
+      } else {
+          company_div.style.height = "0";
+          company_div.style.visibility = 'hidden';
+          company_name.required = false;
+          address.required = false;
+          nip.required = false;
+
+
+      }
+
+  });
+  if (checkbox.checked) {
+      company_div.style.height = "auto";
+      company_div.style.visibility = 'visible';
+      company_name.required = true;
+      address.required = true;
+      nip.required = true;
+
+  } else {
+      company_div.style.height = "0";
+      company_div.style.visibility = 'hidden';
+      company_name.required = false;
+      address.required = false;
+      nip.required = false;
+  }
+</script>
 {% endblock %}

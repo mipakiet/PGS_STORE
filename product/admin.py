@@ -145,6 +145,7 @@ class CartItemAdmin(admin.ModelAdmin):
         "released_date",
         "city",
         "employee_name",
+        "email",
         "address",
         "nip",
         "company_name",

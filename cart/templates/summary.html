@@ -14,29 +14,31 @@
             <td>{{name}}</td>
           </tr>
           <tr>
+            <td>Email</td>
+            <td>{{email}}</td>
+          </tr>
+          {% if address %}
+          <tr>
             <td>Adres</td>
             <td>{{address}}</td>
           </tr>
+          {% endif %}
+          {% if company_name %}
           <tr>
             <td>Nazwa firmy</td>
             <td>
-              {% if company_name %}
                 {{company_name}}
-              {% else %}
-                brak
-              {% endif %}
             </td>
           </tr>
+          {% endif %}
+          {% if nip %}
           <tr>
             <td>Nazwa NIP</td>
             <td>
-              {% if nip %}
                 {{nip}}
-              {% else %}
-                brak
-              {% endif %}
             </td>
           </tr>
+          {% endif %}
         </tbody>
       </table>
     <h1>Produkty</h1>

@@ -120,6 +120,10 @@ def product(request, id):
     return render(request, "product.html", context)
 
 
+def statute(request):
+    return render(request, "statute.html")
+
+
 def handler400(request, *args, **argv):
     context = {"errorcode": "400"}
     return render(request, "error.html", context=context, status=400)
