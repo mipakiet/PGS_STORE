@@ -8,6 +8,11 @@ from django.conf.urls.static import static
 from product.views import *
 from cart.urls import cart_urlpatterns
 
+handler400 = "product.views.handler400"
+handler403 = "product.views.handler403"
+handler404 = "product.views.handler404"
+handler500 = "product.views.handler500"
+
 urlpatterns = (
     [
         path("admin/", admin.site.urls),

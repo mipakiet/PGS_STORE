@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Product, Category
 from django.contrib import messages
 from django.conf import settings
@@ -13,7 +13,11 @@ def index(request):
 
 def category(request, id):
 
-    category_object_chosen = Category.objects.get(pk=id)
+    try:
+        category_object_chosen = Category.objects.get(pk=id)
+    except:
+        return handler404(request)
+
     product_objects = Product.objects.filter(category=category_object_chosen)
 
     context = {
@@ -100,7 +104,7 @@ def product(request, id):
     try:
         product_object = Product.objects.get(pk=id)
     except:
-        product_object = []
+        return handler404(request)
 
     try:
         in_cart = request.session.get(settings.CART_SESSION_ID)[str(id)]["quantity"]
@@ -114,3 +118,23 @@ def product(request, id):
         "in_cart": in_cart,
     }
     return render(request, "product.html", context)
+
+
+def handler400(request, *args, **argv):
+    context = {"errorcode": "400"}
+    return render(request, "error.html", context=context, status=400)
+
+
+def handler403(request, *args, **argv):
+    context = {"errorcode": "403"}
+    return render(request, "error.html", context=context, status=403)
+
+
+def handler404(request, *args, **argv):
+    context = {"errorcode": "404"}
+    return render(request, "error.html", context=context, status=404)
+
+
+def handler500(request, *args, **argv):
+    context = {"errorcode": "500"}
+    return render(request, "error.html", context=context, status=500)
