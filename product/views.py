@@ -93,9 +93,6 @@ def category(request, id):
 
     context["page_obj"] = page_obj
 
-    print(request.get_full_path)
-    print(type(request))
-
     return render(request, "category.html", context)
 
 
