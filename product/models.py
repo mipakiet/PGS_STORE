@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django_jsonform.models.fields import JSONField
 import os
 from uuid import uuid4
+from django.utils.translation import gettext_lazy as _
 
 
 class Category(models.Model):
@@ -15,17 +16,6 @@ class Category(models.Model):
     class Meta:
         verbose_name = "Category"
         verbose_name_plural = "Categories"
-
-
-class City(models.Model):
-    name = models.CharField(max_length=10)
-    shortcut = models.CharField(max_length=3, null=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name_plural = "Cities"
 
 
 class Specification(models.Model):
@@ -59,6 +49,11 @@ def path_and_rename(instance, filename):
 
 
 class Product(models.Model):
+    class City(models.TextChoices):
+        Wroclaw = "WRO", _("Wrocław")
+        Rzeszow = "RZE", _("Rzeszów")
+        Gdansk = "GDA", _("Gdańsk")
+
     name = models.CharField(max_length=30)
     description = models.TextField(null=True, blank=True)
     price = models.DecimalField(decimal_places=2, max_digits=7)
@@ -66,7 +61,7 @@ class Product(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, null=True, blank=True
     )
-    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True)
+    city = models.CharField(max_length=3, choices=City.choices, default=City.Wroclaw)
     quantity = models.PositiveIntegerField(default=0)
 
     spec = JSONField(schema=get_schema, null=True)

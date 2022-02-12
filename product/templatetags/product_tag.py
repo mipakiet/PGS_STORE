@@ -1,4 +1,5 @@
 from django import template
+from product.models import Product
 import re
 import math
 
@@ -32,3 +33,8 @@ def price(value, part=True):
         if len(result) == 1:
             result += "0"
         return result
+
+
+@register.filter
+def city_name(value):
+    return Product.City(value).label

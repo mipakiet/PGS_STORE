@@ -12,7 +12,7 @@
                     <div class="container m-0 p-0 h-100 d-flex flex-column">
                         <div class="row">
                             <span class="fs-2 fw-bold">{{product_object.name}}</span>
-                            <span class="fs-4 my-2">{{product_object.city}}</span>
+                            <span class="fs-4 my-2">{{product_object.city|city_name}}</span>
                             <div><span class="price fs-1">{{product_object.price|price}}</span><span class="price fs-3">,{{product_object.price|price:False}} zł</span></div>
                         </div>
                         <div class="row mt-auto">

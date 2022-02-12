@@ -64,7 +64,7 @@ def category(request, id):
     else:
         cities = ["WRO", "GDA", "RZE"]
 
-    product_objects = product_objects.filter(city__shortcut__in=cities)
+    product_objects = product_objects.filter(city__in=cities)
     product_objects = product_objects.exclude(quantity__lte=0)
 
     if request.GET.get("order"):

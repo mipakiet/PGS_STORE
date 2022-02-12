@@ -21,9 +21,9 @@ class CityFilter(admin.SimpleListFilter):
         value = self.value()
         if value:
             if isinstance(queryset[0], CartItem):
-                return queryset.filter(product__city__shortcut=value)
+                return queryset.filter(product__city=value)
             elif isinstance(queryset[0], Product):
-                return queryset.filter(city__shortcut=value)
+                return queryset.filter(city=value)
         else:
             return queryset
 
@@ -198,4 +198,3 @@ class SpecificationAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Category)
-admin.site.register(City)
