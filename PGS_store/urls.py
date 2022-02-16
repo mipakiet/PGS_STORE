@@ -1,5 +1,4 @@
 from django.contrib import admin
-from product.admin import small_admin_site
 
 from django.urls import path, include
 
@@ -9,15 +8,19 @@ from django.conf.urls.static import static
 from product.views import *
 from cart.urls import cart_urlpatterns
 
+handler400 = "product.views.handler400"
+handler403 = "product.views.handler403"
+handler404 = "product.views.handler404"
+handler500 = "product.views.handler500"
+
 urlpatterns = (
     [
         path("admin/", admin.site.urls),
-        path("small-admin/", small_admin_site.urls),
         path("", index, name="home"),
-        path("category/<id>/", category),
-        path("product/<id>/", product, name="product"),
-        path("cart/", cart, name="cart"),
+        path("category/<int:id>/", category, name="category"),
+        path("product/<int:id>/", product, name="product"),
         path("__debug__/", include("debug_toolbar.urls")),
+        path("statute/", statute, name="statute"),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + cart_urlpatterns

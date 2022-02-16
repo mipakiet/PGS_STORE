@@ -15,11 +15,11 @@ django==3.2.8
     #   -r requirements.in
     #   django-debug-toolbar
     #   django-jsonform
+django-cleanup==6.0.0
+    # via -r requirements.in
 django-debug-toolbar==3.2.4
     # via -r requirements.in
 django-jsonform==2.6.0
-    # via -r requirements.in
-django-shopping-cart==0.1
     # via -r requirements.in
 filelock==3.4.2
     # via virtualenv

@@ -1,56 +1,62 @@
 {% extends "base.html" %}
+{% load product_tag%}
 {% block content %}
-
-
-    <div class="container bg-light p-5">
-
-        {%if product_object %}
-        <div class="row m-0 p-0">
-            <div class="col-6 text-center">
-                <img src="{{product_object.image.url}}" alt="" style="height:350px; max-width: 100%; ">
-            </div>
-            <div class="col-6 m-0 p-0">
-                <div class="container h-100 m-0 p-0">
-                    <p class="fs-1">{{product_object.name}}</p>
-                    <p class="fs-4">{{product_object.city}}</p>
-                    <p class="fs-4 ">{{product_object.price}} zł</p>
-                    <p class="fs-6 ">
-                        Dostępne sztuki - {{product_object.quantity}}<br/>
-                        {% if in_cart != 0 %}
-                        W koszyku - {{in_cart}}
-                        {% endif %}
-                    </p>
-                    <div class="">
-                        <form action="{% url 'cart_add' product_object.id%}" method="GET" id="buyForm">
-                            <div class='my-3'>
-                                <input class="form-control" name='counter' type="number" value='1' id="buyQuantity">
-                            </div>
-                            <button class="btn btn-primary text-white w-100" type="submit">Doadaj do koszyka</button>
-
-                        </form>
+    <div class="container">
+        <div class="container bg-light p-5">
+            {%if product_object %}
+            <div class="row">
+                <div class="col-xl-8 col-12 text-center">
+                    <img src="{{product_object.image.url}}" alt="" style="height:450px; max-width: 100%; ">
+                </div>
+                <div class="col-xl-4 col-12 ">
+                    <div class="container m-0 p-0 h-100 d-flex flex-column">
+                        <div class="row">
+                            <span class="fs-2 fw-bold">{{product_object.name}}</span>
+                            <span class="fs-4 my-2">{{product_object.city|city_name}}</span>
+                            <div><span class="price fs-1">{{product_object.price|price}}</span><span class="price fs-3">,{{product_object.price|price:False}} zł</span></div>
+                        </div>
+                        <div class="row mt-auto">
+                                <form action="{% url 'cart_add' product_object.id%}" method="GET" id="buyForm">
+                                    <div class="container m-0 p-0">
+                                        <div class="row">
+                                            <div class="col-auto" style="width:150px;">
+                                                <input class="form-control form-control-lg" name='counter' type="number" value='1' id="buyQuantity" min="1" max="{{product_object.quantity}}">
+                                            </div>
+                                            <div class="col-auto pt-2 p-0 fs-5">
+                                                <span class="">z {{product_object.quantity}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row m-0 mt-2">
+                                            <button class="btn btn-primary text-white w-100" type="submit">Doadaj do koszyka</button>
+                                        </div>
+                                    </div>
+                                </form>
+                        </div>
+                        <script>
+                            $('#buyForm').submit(function(){
+                            var quantity = $('#buyQuantity').val();
+                            $(this).attr('action', $(this).attr('action').replace( "0", quantity));
+                            });
+                        </script>
                     </div>
-                    <script>
-                        $('#buyForm').submit(function(){
-                        var quantity = $('#buyQuantity').val();
-                        $(this).attr('action', $(this).attr('action').replace( "0", quantity));
-                        });
-                    </script>
                 </div>
             </div>
-        </div>
-        <div class="row fs-3 p-0 m-0">
-            <div class="border border-bottom border-bottom border-3 rounded-3 my-3"></div>
-            {{product_object.description}}
-            <div class="border border-bottom border-3 rounded-3 my-3"></div>
-            <table class="table m-0 p-0">
-              <tbody id="tableBody">
+            <div class="row fs-3 p-0 m-0">
+                {% if product_object.description %}
+                <div class="border border-bottom border-bottom border-3 rounded-3 my-5"></div>
+                {{product_object.description}}
+                {% endif %}
+                <div class="border border-bottom border-3 rounded-3 my-5"></div>
+                <table class="table m-0 p-0">
+                  <tbody id="tableBody">
 
-              </tbody>
-            </table>
+                  </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>Nie znaleziono produktu 404 :</p>
+            {% endif %}
         </div>
-        {% else %}
-        <p>Nie znaleziono produktu 404 :</p>
-        {% endif %}
     </div>
 
     <script>
@@ -60,7 +66,7 @@
         const json = JSON.parse(str);
         for(var key in json){
             if(json[key] != ""){
-                var row = "<tr><td>" + key + "</td><td>" + json[key] + "</td></tr>";
+                var row = "<tr><td style='width:50%'>" + key + "</td><td style='width:50%'>" + json[key] + "</td></tr>";
                 document.getElementById('tableBody').innerHTML += row;
             }
         }

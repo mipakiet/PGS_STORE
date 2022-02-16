@@ -1,8 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Product, Category
 from django.contrib import messages
 from django.conf import settings
-from cart.models import Cart
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 def index(request):
@@ -13,7 +13,11 @@ def index(request):
 
 def category(request, id):
 
-    category_object_chosen = Category.objects.get(pk=id)
+    try:
+        category_object_chosen = Category.objects.get(pk=id)
+    except:
+        return handler404(request)
+
     product_objects = Product.objects.filter(category=category_object_chosen)
 
     context = {
@@ -60,7 +64,7 @@ def category(request, id):
     else:
         cities = ["WRO", "GDA", "RZE"]
 
-    product_objects = product_objects.filter(city__shortcut__in=cities)
+    product_objects = product_objects.filter(city__in=cities)
     product_objects = product_objects.exclude(quantity__lte=0)
 
     if request.GET.get("order"):
@@ -77,9 +81,19 @@ def category(request, id):
             product_objects = product_objects.order_by("-name")
             context["order"] = 4
 
-    context["product_objects"] = product_objects
+    paginator = Paginator(product_objects, 15)
 
-    return render(request, "list.html", context)
+    page = request.GET.get("page")
+    try:
+        page_obj = paginator.page(page)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    context["page_obj"] = page_obj
+
+    return render(request, "category.html", context)
 
 
 def product(request, id):
@@ -87,10 +101,10 @@ def product(request, id):
     try:
         product_object = Product.objects.get(pk=id)
     except:
-        product_object = []
+        return handler404(request)
 
     try:
-        in_cart = request.session.get(settings.CART_SESSION_ID)[id]["quantity"]
+        in_cart = request.session.get(settings.CART_SESSION_ID)[str(id)]["quantity"]
     except:
         in_cart = 0
 
@@ -103,25 +117,25 @@ def product(request, id):
     return render(request, "product.html", context)
 
 
-def cart(request):
+def statute(request):
+    return render(request, "statute.html")
 
-    print(request.session.get(settings.CART_SESSION_ID))
-    price_for_everything = 0
-    if request.session.get(settings.CART_SESSION_ID):
-        for key, item in request.session.get(settings.CART_SESSION_ID).items():
-            if Product.objects.get(id=item["product_id"]).quantity < item["quantity"]:
 
-                cart_obj = Cart(request)
-                product_obj = Product.objects.get(id=item["product_id"])
-                cart_obj.decrement(product=product_obj, quantity=item["product_id"])
-                messages.success(
-                    request, (f"Produkt który miałeś w koszyku został kupiony  :(")
-                )
+def handler400(request, *args, **argv):
+    context = {"errorcode": "400"}
+    return render(request, "error.html", context=context, status=400)
 
-            price_for_everything += int(item["quantity"]) * int(
-                Product.objects.get(id=item["product_id"]).price
-            )
 
-    context = {"price_for_everything": price_for_everything}
+def handler403(request, *args, **argv):
+    context = {"errorcode": "403"}
+    return render(request, "error.html", context=context, status=403)
 
-    return render(request, "cart.html", context)
+
+def handler404(request, *args, **argv):
+    context = {"errorcode": "404"}
+    return render(request, "error.html", context=context, status=404)
+
+
+def handler500(request, *args, **argv):
+    context = {"errorcode": "500"}
+    return render(request, "error.html", context=context, status=500)

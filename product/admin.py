@@ -1,7 +1,10 @@
 from django.contrib import admin
 from .models import *
 from django.utils.safestring import mark_safe
-from django.contrib.admin import AdminSite
+from datetime import date
+from django.contrib import messages
+from django.contrib.admin.helpers import ActionForm
+from django import forms
 
 
 class CityFilter(admin.SimpleListFilter):
@@ -17,22 +20,10 @@ class CityFilter(admin.SimpleListFilter):
             return queryset
         value = self.value()
         if value:
-            return queryset.filter(city__shortcut=value)
-        else:
-            return queryset
-
-
-class StateFilter(admin.SimpleListFilter):
-    title = "state"
-    parameter_name = "state"
-
-    def lookups(self, request, model_admin):
-        return (("In cart", "In cart"), ("Bought", "Bought"), ("Finished", "Finished"))
-
-    def queryset(self, request, queryset):
-        value = self.value()
-        if value:
-            return queryset.filter(state=value)
+            if isinstance(queryset[0], CartItem):
+                return queryset.filter(product__city=value)
+            elif isinstance(queryset[0], Product):
+                return queryset.filter(city=value)
         else:
             return queryset
 
@@ -56,39 +47,154 @@ class CategoryFilter(admin.SimpleListFilter):
             return queryset
 
 
+class ReleasedFilter(admin.SimpleListFilter):
+    title = "released"
+    parameter_name = "released"
+
+    def lookups(self, request, model_admin):
+        return ((True, "Yes"), (False, "No"))
+
+    def queryset(self, request, queryset):
+
+        if not queryset:
+            return queryset
+        value = self.value()
+        if value is not None:
+            return queryset.filter(released=value)
+        else:
+            return queryset
+
+
+class BillFilter(admin.SimpleListFilter):
+    title = "bill"
+    parameter_name = "bill"
+
+    def lookups(self, request, model_admin):
+        return ((True, "Yes"), (False, "No"))
+
+    def queryset(self, request, queryset):
+
+        if not queryset:
+            return queryset
+        value = self.value()
+        if value is not None:
+            return queryset.filter(bill=value)
+        else:
+            return queryset
+
+
+class AddSubQuantityForm(ActionForm):
+    quantity = forms.IntegerField(required=False)
+
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ("name", "city", "quantity", "price", "add_up", "image_thumbnail")
+    list_display = (
+        "image_thumbnail",
+        "name",
+        "city",
+        "quantity",
+        "price",
+        "price_for_all",
+    )
     readonly_fields = ["image_thumbnail"]
-    actions = ["add_1", "subtrack_1"]
+    actions = ["add_or_subtract", "delete"]
+    action_form = AddSubQuantityForm
     list_filter = ("category", CityFilter)
 
-    def add_up(self, obj):
+    def price_for_all(self, obj):
         return obj.price * obj.quantity
 
-    def subtrack_1(self, request, queryset):
+    def add_or_subtract(self, request, queryset):
+        if not request.POST["quantity"]:
+            messages.add_message(request, messages.ERROR, f"Podaj ilosc")
+            return
         for obj in queryset:
-            obj.quantity = obj.quantity - 1
-            obj.save()
+            if obj.quantity + int(request.POST["quantity"]) < 0:
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    f"'{obj.name}' ilość produktu nie może być ujemna",
+                )
+            else:
+                obj.quantity += int(request.POST["quantity"])
+                obj.save()
 
-    def add_1(self, request, queryset):
+    def delete(self, request, queryset):
         for obj in queryset:
-            obj.quantity = obj.quantity + 1
-            obj.save()
+            obj.delete()
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+
+        if "delete_selected" in actions:
+            del actions["delete_selected"]
+        return actions
 
     def image_thumbnail(self, obj):
         return mark_safe(f'<img src="{obj.image.url}" width="150" height="100" />')
 
 
+@admin.register(CartItem)
+class CartItemAdmin(admin.ModelAdmin):
+    list_display = (
+        "image_thumbnail",
+        "order_date",
+        "bill",
+        "released",
+        "released_date",
+        "city",
+        "employee_name",
+        "email",
+        "address",
+        "nip",
+        "company_name",
+        "quantity",
+        "price",
+        "price_for_all",
+    )
+    list_filter = (CityFilter, CategoryFilter, ReleasedFilter, BillFilter)
+    actions = ["release", "bill", "cancel"]
+
+    def price_for_all(self, obj):
+        return obj.quantity * obj.price
+
+    def city(self, obj):
+        return obj.product.city
+
+    def image_thumbnail(self, obj):
+        return mark_safe(
+            f'<img src="{obj.product.image.url}" width="150" height="100" />'
+        )
+
+    def release(self, request, queryset):
+        for obj in queryset:
+            obj.released_date = date.today()
+            obj.released = True
+            obj.save()
+
+    def bill(self, request, queryset):
+        for obj in queryset:
+            obj.bill = True
+            obj.save()
+
+    def cancel(self, request, queryset):
+        for obj in queryset:
+            if obj.released or obj.bill:
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    f"{obj.product.name} ma wystawiona fakture albo jest wydany. Nie możesz go usunąć",
+                )
+            else:
+                obj.product.quantity += obj.quantity
+                obj.product.save()
+                obj.delete()
+
+
+@admin.register(Specification)
+class SpecificationAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+
+
 admin.site.register(Category)
-admin.site.register(City)
-
-
-class SmallAdminSite(AdminSite):
-    site_header = "PGS Admin"
-    site_title = "PGS Admin Portal"
-    index_title = "Welcome to PGS Admin Portal"
-
-
-small_admin_site = SmallAdminSite(name="small_admin")
-small_admin_site.register(Product, ProductAdmin)

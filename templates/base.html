@@ -7,26 +7,24 @@
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static '/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static '/bootsrap.css' %}">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
 </head>
-<body class="d-flex flex-column h-100">
-
-    <header class="container my-3 px-0">
-        <div class="row justify-content-between">
-            <div class="col">
+<body>
+    <header class="container my-3">
+        <div class="row m-0 p-0">
+            <div class=" m-0 p-0">
                 <a href="/">
-                    {% load static %}
                     <img src="{% static '/pgslogo.png' %}" alt="" style="height: 100px; width: auto;">
                 </a>
             </div>
-            <div class="col text-end position-relative">
-                <form action="{% url 'cart' %}" class=" position-absolute top-50 end-0 translate-middle-y">
+            <div class="col text-end position-relative m-0 p-0">
+                <form action="{% url 'cart' %}" class=" position-absolute top-50 end-0 translate-middle-y" style="margin-right: -10px;">
                     <button class="orange_button position-relative" type="submit">
                         {% if request.session.cart.items %}
                         {% load cart_tag  %}
@@ -37,25 +35,27 @@
                 </form>
             </div>
         </div>
-        <div class="row px-3">
-            {% if messages %}
+        {% if messages %}
+        <div class="row m-0 mt-3 p-0">
             {% for message in messages %}
-            <div class="alert alert-warning  alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
             {% endfor %}
-            {% endif %}
         </div>
+        {% endif %}
     </header>
-    <main>
-    </main>
+    <main class="content">
     {% block content %} {% endblock %}
+    </main>
 
-    <footer class="footer mt-auto py-3">
-      <div class="container p-3 text-center">
-        <span class="text-muted">PGS Software &copy; Milego dnia!</span>
+    <footer>
+      <div class="footer p-4 text-center">
+        <span class="text-muted">PGS Software &copy; Miłego dnia!</span>
       </div>
     </footer>
+
+    <script src="{% static '/bootsrap.min.js' %}"></script>
 </body>
 </html>
