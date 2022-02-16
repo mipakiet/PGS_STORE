@@ -71,6 +71,7 @@ class Product(models.Model):
 
 
 class CartItem(models.Model):
+    order_id = models.PositiveIntegerField(default=0)
     employee_name = models.CharField(max_length=50)
     email = models.CharField(max_length=50)
     company_name = models.CharField(max_length=50)

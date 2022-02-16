@@ -82,7 +82,7 @@
           <div class="form-check mt-auto">
             <input class="form-check-input" type="checkbox" id="company" name="company" value="T">
             <label class="form-check-label" for="company">
-              Na firmę
+              Faktura VAT
             </label>
           </div>
           <div class="form-check">
@@ -97,9 +97,9 @@
             </div>
             <div class="col-6 text-end">
               {% if request.session.cart.items %}
-              <input class="btn btn-primary text-white  btn-lg" type="submit" value="Kupuje!">
+              <input class="btn btn-primary text-white  btn-lg" type="submit" value="Złóż zamówienie">
               {% else %}
-              <input class="btn btn-primary text-white  btn-lg" type="submit" value="Kupuje!" disabled>
+              <input class="btn btn-primary text-white  btn-lg" type="submit" value="Złóż zamówienie" disabled>
               {% endif %}
             </div>
           </div>

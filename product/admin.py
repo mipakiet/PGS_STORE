@@ -138,6 +138,7 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(CartItem)
 class CartItemAdmin(admin.ModelAdmin):
     list_display = (
+        "order_id",
         "image_thumbnail",
         "order_date",
         "bill",

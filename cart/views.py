@@ -13,7 +13,6 @@ def check_cart_with_db(request):
         for key, item in cart_copy.items():
             product = Product.objects.get(id=item["product_id"])
             if product.quantity < item["quantity"]:
-
                 cart_obj = Cart(request)
                 cart_obj.decrement(
                     product=product, quantity=item["quantity"] - product.quantity
@@ -27,7 +26,6 @@ def check_cart_with_db(request):
 
 
 def get_cart_price(request):
-
     price_for_everything = 0
     if request.session.get(settings.CART_SESSION_ID):
         for key, item in request.session.get(settings.CART_SESSION_ID).items():
@@ -38,7 +36,6 @@ def get_cart_price(request):
 
 
 def cart(request):
-
     check_cart_with_db(request)
     price_for_everything = get_cart_price(request)
 
@@ -87,7 +84,6 @@ def cart_clear(request):
 
 
 def buy(request):
-
     if not (
         request.GET.get("firstName")
         and request.GET.get("secondName")
@@ -123,6 +119,11 @@ def buy(request):
 
     price_for_all = 0
 
+    try:
+        order_id = CartItem.objects.all().last().order_id + 1
+    except:
+        order_id = 0
+
     if request.GET.get("company"):
         context["company_name"] = request.GET.get("company_name")
         context["address"] = request.GET.get("address")
@@ -134,6 +135,7 @@ def buy(request):
             price_for_all += item["quantity"] * product.price
 
             cart_item = CartItem(
+                order_id=order_id,
                 employee_name=name,
                 email=email,
                 address=address,
@@ -153,6 +155,7 @@ def buy(request):
             price_for_all += item["quantity"] * product.price
 
             cart_item = CartItem(
+                order_id=order_id,
                 employee_name=name,
                 email=email,
                 address=address,
