@@ -1,3 +1,4 @@
+import os.path
 from django.shortcuts import render, redirect
 from product.models import Product, CartItem
 from product.views import handler404
@@ -5,6 +6,10 @@ from .models import Cart
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from django.contrib import messages
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from email.mime.image import MIMEImage
 
 
 def check_cart_with_db(request):
@@ -84,6 +89,7 @@ def cart_clear(request):
 
 
 def buy(request):
+
     if not (
         request.GET.get("firstName")
         and request.GET.get("secondName")
@@ -115,6 +121,9 @@ def buy(request):
 
     if len(request.session.get(settings.CART_SESSION_ID)) == 0:
         messages.success(request, ("Nie masz nic w koszyku"))
+        return redirect("cart")
+
+    if not send_email(request):
         return redirect("cart")
 
     price_for_all = 0
@@ -171,3 +180,49 @@ def buy(request):
     cart.clear()
 
     return render(request, "summary.html", context)
+
+
+def send_email(request):
+
+    price_for_all = 0
+    for key, item in request.session.get(settings.CART_SESSION_ID).items():
+        price_for_all += (
+            item["quantity"] * Product.objects.get(id=item["product_id"]).price
+        )
+
+    context = {
+        "cart": request.session.get(settings.CART_SESSION_ID),
+        "price_for_all": price_for_all,
+        "name": request.GET.get("firstName"),
+        "surname": request.GET.get("secondName"),
+        "email": request.GET.get("email"),
+    }
+
+    if request.GET.get("company"):
+        context["company_name"] = request.GET.get("company_name")
+        context["address"] = request.GET.get("address")
+        context["nip"] = request.GET.get("nip")
+
+    html_content = render_to_string("mail_summary.html", context)
+    text_content = strip_tags(html_content)
+    msg = EmailMultiAlternatives(
+        "Podumowanie zamówienia", text_content, to=["mipakiet@pgs-soft.com"]
+    )
+    msg.attach_alternative(html_content, "text/html")
+
+    with open("static/pgsLogo.png", mode="rb") as f:
+        image = MIMEImage(f.read())
+        msg.attach(image)
+        image.add_header("Content-ID", "<pgsLogo>")
+
+    for key, item in request.session.get(settings.CART_SESSION_ID).items():
+        with open(item["image"][1:], mode="rb") as f:
+            image = MIMEImage(f.read())
+            msg.attach(image)
+            image.add_header("Content-ID", f"<{item['product_id']}>")
+    try:
+        msg.send()
+        return True
+    except:
+        messages.success(request, ("Nastąpił błąd z wysyłaniem maila"))
+        return False
