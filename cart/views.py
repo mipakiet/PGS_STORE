@@ -93,7 +93,7 @@ def buy(request):
     if not (
         request.GET.get("firstName")
         and request.GET.get("secondName")
-        and request.GET.get("email")
+        and request.GET.get("login")
         and request.GET.get("statute")
     ):
         return handler404(request)
@@ -108,11 +108,11 @@ def buy(request):
 
     name = request.GET.get("firstName") + " " + request.GET.get("secondName")
     address = request.GET.get("address")
-    email = request.GET.get("email")
+    login = request.GET.get("login")
 
     context = {
         "name": name,
-        "email": str(email),
+        "login": str(login),
         "address": address,
         "cart": request.session.get(settings.CART_SESSION_ID),
     }
@@ -146,7 +146,7 @@ def buy(request):
             cart_item = CartItem(
                 order_id=order_id,
                 employee_name=name,
-                email=email,
+                login=login,
                 address=address,
                 company_name=request.GET.get("company_name"),
                 nip=request.GET.get("nip"),
@@ -166,7 +166,7 @@ def buy(request):
             cart_item = CartItem(
                 order_id=order_id,
                 employee_name=name,
-                email=email,
+                login=login,
                 address=address,
                 product=Product.objects.get(id=item["product_id"]),
                 quantity=item["quantity"],
@@ -195,13 +195,14 @@ def send_email(request):
         "price_for_all": price_for_all,
         "name": request.GET.get("firstName"),
         "surname": request.GET.get("secondName"),
-        "email": request.GET.get("email"),
+        "login": request.GET.get("login"),
     }
 
     if request.GET.get("company"):
         context["company_name"] = request.GET.get("company_name")
         context["address"] = request.GET.get("address")
         context["nip"] = request.GET.get("nip")
+        context["company"] = True
 
     html_content = render_to_string("mail_summary.html", context)
     text_content = strip_tags(html_content)
