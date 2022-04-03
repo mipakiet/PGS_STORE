@@ -207,7 +207,9 @@ def send_email(request):
     html_content = render_to_string("mail_summary.html", context)
     text_content = strip_tags(html_content)
     msg = EmailMultiAlternatives(
-        "Podumowanie zamówienia", text_content, to=["mipakiet@pgs-soft.com"]
+        "Podumowanie zamówienia",
+        text_content,
+        to=[f"{request.GET.get('login')}@pgs-soft.com"],
     )
     msg.attach_alternative(html_content, "text/html")
 
