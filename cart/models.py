@@ -66,6 +66,13 @@ class Cart(object):
             del self.cart[product_id]
             self.save()
 
+    def remove_from_id(self, product_id):
+        product_id = str(product_id)
+        if product_id in self.cart:
+            del self.cart[product_id]
+            print("success")
+            self.save()
+
     def decrement(self, product, quantity):
         for key, value in self.cart.items():
             if key == str(product.id):

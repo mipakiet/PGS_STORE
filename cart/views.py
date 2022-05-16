@@ -16,18 +16,29 @@ def check_cart_with_db(request):
     if request.session.get(settings.CART_SESSION_ID):
         cart_copy = request.session.get(settings.CART_SESSION_ID).copy()
         for key, item in cart_copy.items():
-            product = Product.objects.get(id=item["product_id"])
-            if product.quantity < item["quantity"]:
+            if Product.objects.filter(id=item["product_id"]).exists():
+                product = Product.objects.get(id=item["product_id"])
+                if product.quantity < item["quantity"]:
+                    cart_obj = Cart(request)
+                    cart_obj.decrement(
+                        product=product, quantity=item["quantity"] - product.quantity
+                    )
+                    messages.success(
+                        request,
+                        (
+                            f"Produkt {product.name} który miałeś w koszyku został kupiony  :("
+                        ),
+                    )
+            else:
                 cart_obj = Cart(request)
-                cart_obj.decrement(
-                    product=product, quantity=item["quantity"] - product.quantity
-                )
+                cart_obj.remove_from_id(product_id=item["product_id"])
                 messages.success(
                     request,
                     (
-                        f"Produkt {product.name} który miałeś w koszyku został kupiony  :("
+                        f"Produkt {item['name']} który miałeś w koszyku został usunięty  :("
                     ),
                 )
+        return request
 
 
 def get_cart_price(request):
@@ -41,8 +52,8 @@ def get_cart_price(request):
 
 
 def cart(request):
-    check_cart_with_db(request)
-    price_for_everything = get_cart_price(request)
+    request = check_cart_with_db(request)
+    price_for_everything = 0
 
     context = {"price_for_everything": price_for_everything}
 
