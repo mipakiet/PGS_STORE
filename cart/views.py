@@ -29,6 +29,7 @@ def check_cart_with_db(request):
                             f"Produkt {product.name} który miałeś w koszyku został kupiony  :("
                         ),
                     )
+                    return False
             else:
                 cart_obj = Cart(request)
                 cart_obj.remove_from_id(product_id=item["product_id"])
@@ -38,7 +39,8 @@ def check_cart_with_db(request):
                         f"Produkt {item['name']} który miałeś w koszyku został usunięty  :("
                     ),
                 )
-        return request
+                return False
+        return True
 
 
 def get_cart_price(request):
@@ -133,7 +135,8 @@ def buy(request):
         "cart": request.session.get(settings.CART_SESSION_ID),
     }
 
-    check_cart_with_db(request)
+    if not check_cart_with_db(request):
+        return redirect("cart")
 
     if len(request.session.get(settings.CART_SESSION_ID)) == 0:
         messages.success(request, ("Nie masz nic w koszyku"))
