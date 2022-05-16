@@ -52,7 +52,7 @@ def get_cart_price(request):
 
 
 def cart(request):
-    request = check_cart_with_db(request)
+    check_cart_with_db(request)
     price_for_everything = 0
 
     context = {"price_for_everything": price_for_everything}
@@ -61,6 +61,7 @@ def cart(request):
 
 
 def cart_add(request, id, quan=1):
+    check_cart_with_db(request)
     if request.GET.get("counter"):
         quantity = int(request.GET["counter"])
     else:
@@ -72,6 +73,10 @@ def cart_add(request, id, quan=1):
         )
     except:
         in_cart = 0
+
+    if not Product.objects.filter(id=id).exists():
+        messages.success(request, f"Produkt został usunięty :(")
+        return redirect("home")
 
     product = Product.objects.get(id=id)
 
