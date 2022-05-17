@@ -55,7 +55,7 @@ def get_cart_price(request):
 
 def cart(request):
     check_cart_with_db(request)
-    price_for_everything = 0
+    price_for_everything = get_cart_price(request)
 
     context = {"price_for_everything": price_for_everything}
 
