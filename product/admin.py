@@ -6,7 +6,6 @@ from django.contrib import messages
 from django.contrib.admin.helpers import ActionForm
 from django import forms
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
-from unidecode import unidecode
 from django.contrib.admin.options import get_content_type_for_model
 
 
