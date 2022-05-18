@@ -113,15 +113,12 @@ def buy(request):
         and request.GET.get("secondName")
         and request.GET.get("login")
         and request.GET.get("statute")
+        and request.GET.get("address")
     ):
         return handler404(request)
 
     if request.GET.get("company"):
-        if not (
-            request.GET.get("company_name")
-            and request.GET.get("address")
-            and request.GET.get("nip")
-        ):
+        if not (request.GET.get("company_name") and request.GET.get("nip")):
             return handler404(request)
 
     name = request.GET.get("firstName") + " " + request.GET.get("secondName")
@@ -134,6 +131,10 @@ def buy(request):
         "address": address,
         "cart": request.session.get(settings.CART_SESSION_ID),
     }
+
+    if request.GET.get("company"):
+        context["company_name"] = request.GET.get("company_name")
+        context["address"] = request.GET.get("address")
 
     if not check_cart_with_db(request):
         return redirect("cart")
@@ -153,9 +154,6 @@ def buy(request):
         order_id = 0
 
     if request.GET.get("company"):
-        context["company_name"] = request.GET.get("company_name")
-        context["address"] = request.GET.get("address")
-        context["nip"] = request.GET.get("nip")
         for key, item in request.session.get(settings.CART_SESSION_ID).items():
             product = Product.objects.get(id=item["product_id"])
             product.quantity -= item["quantity"]

@@ -74,9 +74,9 @@ class CartItem(models.Model):
     order_id = models.PositiveIntegerField(default=0)
     employee_name = models.CharField(max_length=50)
     login = models.CharField(max_length=50)
-    company_name = models.CharField(max_length=50)
     address = models.CharField(max_length=50)
-    nip = models.CharField(max_length=10, null=True)
+    company_name = models.CharField(max_length=50, blank=True)
+    nip = models.CharField(max_length=10, blank=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
     price = models.DecimalField(decimal_places=2, max_digits=7)
@@ -84,4 +84,4 @@ class CartItem(models.Model):
 
     bill = models.BooleanField(default=False)
     released = models.BooleanField(default=False)
-    released_date = models.DateField(null=True)
+    released_date = models.DateField(null=True, blank=True)

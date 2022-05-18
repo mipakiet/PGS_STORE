@@ -65,14 +65,14 @@
             <label for="login" class="form-label p-0">Login PGS</label>
             <input type="text" class="form-control" id="login" name="login" placeholder="jkowalski" maxlength="30" required>
           </div>
+          <div class="p-0 m-0 mb-3">
+            <label for="address" class="form-label p-0">Adres</label>
+            <input type="text" class="form-control" id="address" name="address" placeholder="Sucha 3, 50-086 Wrocław" maxlength="60" required>
+          </div>
           <div id="company_div" style="visibility: hidden;">
             <div class="p-0 m-0 mb-3">
               <label for="company_name" class="form-label p-0">Nazwa firmy</label>
               <input type="text" class="form-control" id="company_name" name="company_name" placeholder="PGS Software"  maxlength="30">
-            </div>
-            <div class="p-0 m-0 mb-3">
-              <label for="address" class="form-label p-0">Adres</label>
-              <input type="text" class="form-control" id="address" name="address" placeholder="Sucha 3, 50-086 Wrocław" maxlength="60">
             </div>
             <div class="p-0 m-0 mb-3  mt-auto">
               <label for="nip" class="form-label p-0">NIP</label>
@@ -112,21 +112,17 @@
   var checkbox = document.getElementById('company');
 
   var company_name = document.getElementById("company_name");
-  var address = document.getElementById("address");
   var nip = document.getElementById("nip");
   var company_div = document.getElementById("company_div");
   checkbox.addEventListener('change', () => {
       if (checkbox.checked) {
           company_div.style.visibility = 'visible';
           company_name.required = true;
-          address.required = true;
           nip.required = true;
       } else {
           company_div.style.visibility = 'hidden';
           company_name.required = false;
-          address.required = false;
           nip.required = false;
-
 
       }
 
@@ -134,13 +130,11 @@
   if (checkbox.checked) {
       company_div.style.visibility = 'visible';
       company_name.required = true;
-      address.required = true;
       nip.required = true;
 
   } else {
       company_div.style.visibility = 'hidden';
       company_name.required = false;
-      address.required = false;
       nip.required = false;
   }
 </script>
