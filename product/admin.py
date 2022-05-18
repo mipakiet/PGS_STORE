@@ -5,6 +5,9 @@ from datetime import date
 from django.contrib import messages
 from django.contrib.admin.helpers import ActionForm
 from django import forms
+from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
+from unidecode import unidecode
+from django.contrib.admin.options import get_content_type_for_model
 
 
 class CityFilter(admin.SimpleListFilter):
@@ -173,11 +176,27 @@ class CartItemAdmin(admin.ModelAdmin):
             obj.released_date = date.today()
             obj.released = True
             obj.save()
+            LogEntry.objects.log_action(
+                user_id=request.user.pk,
+                content_type_id=get_content_type_for_model(obj).pk,
+                object_id=obj.pk,
+                object_repr=str(obj),
+                action_flag=CHANGE,
+                change_message="Changed Released.",
+            )
 
     def bill(self, request, queryset):
         for obj in queryset:
             obj.bill = True
             obj.save()
+            LogEntry.objects.log_action(
+                user_id=request.user.pk,
+                content_type_id=get_content_type_for_model(obj).pk,
+                object_id=obj.pk,
+                object_repr=str(obj),
+                action_flag=CHANGE,
+                change_message="Changed Bill.",
+            )
 
     def cancel(self, request, queryset):
         for obj in queryset:
