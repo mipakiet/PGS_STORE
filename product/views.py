@@ -8,6 +8,8 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 def index(request):
     category_object = Category.objects.all()
     context = {"category_object": category_object}
+    if settings.DEBUG:
+        context["version"] = settings.VERSION
     return render(request, "index.html", context)
 
 

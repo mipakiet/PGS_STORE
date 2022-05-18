@@ -1,6 +1,8 @@
 from pathlib import Path
 import os
 
+VERSION = "0.1.2"
+
 SERVER = False
 
 try:
