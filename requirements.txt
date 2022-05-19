@@ -21,6 +21,8 @@ django-debug-toolbar==3.2.4
     # via -r requirements.in
 django-jsonform==2.6.0
     # via -r requirements.in
+django-simple-history==3.1.1
+    # via -r requirements.in
 filelock==3.4.2
     # via virtualenv
 identify==2.4.1
@@ -31,7 +33,7 @@ pillow==9.0.0
     # via -r requirements.in
 platformdirs==2.4.1
     # via virtualenv
-pre_commit==2.16.0
+pre-commit==2.16.0
     # via -r requirements.in
 pytz==2021.3
     # via django
