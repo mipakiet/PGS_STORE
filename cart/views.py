@@ -10,6 +10,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from email.mime.image import MIMEImage
+from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
+from django.contrib.admin.options import get_content_type_for_model
 
 
 def check_cart_with_db(request):
@@ -158,43 +160,35 @@ def buy(request):
         return redirect("cart")
 
     # buy
-    if request.GET.get("company"):
-        for key, item in request.session.get(settings.CART_SESSION_ID).items():
-            product = Product.objects.get(id=item["product_id"])
-            product.quantity -= item["quantity"]
-            product.save()
-            price_for_all += item["quantity"] * product.price
+    for key, item in request.session.get(settings.CART_SESSION_ID).items():
+        product = Product.objects.get(id=item["product_id"])
+        product.quantity -= item["quantity"]
+        product.save()
+        price_for_all += item["quantity"] * product.price
+        cart_item = CartItem(
+            order_id=order_id,
+            employee_name=name,
+            login=login,
+            address=address,
+            product=Product.objects.get(id=item["product_id"]),
+            quantity=item["quantity"],
+            price=item["price"],
+        )
+        if request.GET.get("company"):
+            cart_item.company_name = (request.GET.get("company_name"),)
+            cart_item.nip = (request.GET.get("nip"),)
 
-            cart_item = CartItem(
-                order_id=order_id,
-                employee_name=name,
-                login=login,
-                address=address,
-                company_name=request.GET.get("company_name"),
-                nip=request.GET.get("nip"),
-                product=Product.objects.get(id=item["product_id"]),
-                quantity=item["quantity"],
-                price=item["price"],
-            )
-            cart_item.save()
+        cart_item.save()
 
-    else:
-        for key, item in request.session.get(settings.CART_SESSION_ID).items():
-            product = Product.objects.get(id=item["product_id"])
-            product.quantity -= item["quantity"]
-            product.save()
-            price_for_all += item["quantity"] * product.price
-
-            cart_item = CartItem(
-                order_id=order_id,
-                employee_name=name,
-                login=login,
-                address=address,
-                product=Product.objects.get(id=item["product_id"]),
-                quantity=item["quantity"],
-                price=item["price"],
-            )
-            cart_item.save()
+        # add log
+        LogEntry.objects.log_action(
+            user_id=request.user.pk,
+            content_type_id=get_content_type_for_model(cart_item).pk,
+            object_id=cart_item.pk,
+            object_repr=str(cart_item),
+            action_flag=CHANGE,
+            change_message="Added.",
+        )
 
     context["price_for_all"] = price_for_all
 
