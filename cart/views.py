@@ -108,6 +108,7 @@ def cart_clear(request):
 
 def buy(request):
 
+    # check that the data is valid
     if not (
         request.GET.get("firstName")
         and request.GET.get("secondName")
@@ -121,10 +122,19 @@ def buy(request):
         if not (request.GET.get("company_name") and request.GET.get("nip")):
             return handler404(request)
 
+    # check cart with database
+    if not check_cart_with_db(request):
+        return redirect("cart")
+
+    # check if cart is not empty
+    if len(request.session.get(settings.CART_SESSION_ID)) == 0:
+        messages.success(request, ("Nie masz nic w koszyku"))
+        return redirect("cart")
+
+    # assign variables
     name = request.GET.get("firstName") + " " + request.GET.get("secondName")
     address = request.GET.get("address")
     login = request.GET.get("login")
-
     context = {
         "name": name,
         "login": str(login),
@@ -136,23 +146,18 @@ def buy(request):
         context["company_name"] = request.GET.get("company_name")
         context["address"] = request.GET.get("address")
 
-    if not check_cart_with_db(request):
-        return redirect("cart")
+    price_for_all = 0
 
-    if len(request.session.get(settings.CART_SESSION_ID)) == 0:
-        messages.success(request, ("Nie masz nic w koszyku"))
-        return redirect("cart")
+    if CartItem.objects.filter().exists():
+        order_id = CartItem.objects.all().last().order_id + 1
+    else:
+        order_id = 0
 
+    # send mail
     if not send_email(request):
         return redirect("cart")
 
-    price_for_all = 0
-
-    try:
-        order_id = CartItem.objects.all().last().order_id + 1
-    except:
-        order_id = 0
-
+    # buy
     if request.GET.get("company"):
         for key, item in request.session.get(settings.CART_SESSION_ID).items():
             product = Product.objects.get(id=item["product_id"])
@@ -193,8 +198,8 @@ def buy(request):
 
     context["price_for_all"] = price_for_all
 
-    cart = Cart(request)
-    cart.clear()
+    # clear cart
+    Cart(request).clear()
 
     return render(request, "summary.html", context)
 
