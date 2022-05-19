@@ -128,10 +128,21 @@ def buy(request):
     if not check_cart_with_db(request):
         return redirect("cart")
 
+    # copy cart
+    cart_items = request.session.get(settings.CART_SESSION_ID)
+    print(request.session)
+
     # check if cart is not empty
-    if len(request.session.get(settings.CART_SESSION_ID)) == 0:
+    if len(cart_items) == 0:
         messages.success(request, ("Nie masz nic w koszyku"))
         return redirect("cart")
+
+    # send mail
+    if not send_email(request):
+        return redirect("cart")
+
+    # clear cart
+    Cart(request).clear()
 
     # assign variables
     name = request.GET.get("firstName") + " " + request.GET.get("secondName")
@@ -141,7 +152,7 @@ def buy(request):
         "name": name,
         "login": str(login),
         "address": address,
-        "cart": request.session.get(settings.CART_SESSION_ID),
+        "cart": cart_items,
     }
 
     if request.GET.get("company"):
@@ -155,12 +166,8 @@ def buy(request):
     else:
         order_id = 0
 
-    # send mail
-    if not send_email(request):
-        return redirect("cart")
-
     # buy
-    for key, item in request.session.get(settings.CART_SESSION_ID).items():
+    for key, item in cart_items.items():
         product = Product.objects.get(id=item["product_id"])
         product.quantity -= item["quantity"]
         product.save()
@@ -191,9 +198,6 @@ def buy(request):
         )
 
     context["price_for_all"] = price_for_all
-
-    # clear cart
-    Cart(request).clear()
 
     return render(request, "summary.html", context)
 

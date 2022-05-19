@@ -49,7 +49,7 @@
       </div>
     </div>
     <div class="col-md-12 col-xl-4">
-      <form action="{% url 'buy'%}" method="GET" class="h-100">
+      <form action="{% url 'buy'%}" id="buyForm" method="GET" class="h-100">
         <div class="container bg-light p-3 h-100 d-flex flex-column">
           <h2>Dane</h2>
           <div class="border border-bottom border-1 rounded-3 mb-2"></div>
@@ -97,9 +97,9 @@
             </div>
             <div class="col-6 text-end">
               {% if request.session.cart.items %}
-              <input class="btn btn-primary text-white  btn-lg" type="submit" value="Złóż zamówienie">
+              <input class="btn btn-primary text-white  btn-lg" id="orderButton" type="submit" value="Złóż zamówienie">
               {% else %}
-              <input class="btn btn-primary text-white  btn-lg" type="submit" value="Złóż zamówienie" disabled>
+              <input class="btn btn-primary text-white  btn-lg" id="orderButton" type="submit" value="Złóż zamówienie" disabled>
               {% endif %}
             </div>
           </div>
@@ -109,6 +109,13 @@
   </div>
 </div>
 <script>
+  // set orderButton disabled after clicking
+  document.getElementById('buyForm').addEventListener('submit', () => {
+      document.getElementById('orderButton').disabled = true;
+      console.log("hi");
+  });
+
+  // set hiding and requiring
   var checkbox = document.getElementById('company');
 
   var company_name = document.getElementById("company_name");
@@ -119,6 +126,7 @@
           company_div.style.visibility = 'visible';
           company_name.required = true;
           nip.required = true;
+          console.log("hi");
       } else {
           company_div.style.visibility = 'hidden';
           company_name.required = false;
