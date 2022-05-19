@@ -187,16 +187,6 @@ def buy(request):
 
         cart_item.save()
 
-        # add log
-        LogEntry.objects.log_action(
-            user_id=request.user.pk,
-            content_type_id=get_content_type_for_model(cart_item).pk,
-            object_id=cart_item.pk,
-            object_repr=str(cart_item),
-            action_flag=CHANGE,
-            change_message="Added.",
-        )
-
     context["price_for_all"] = price_for_all
 
     return render(request, "summary.html", context)

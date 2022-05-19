@@ -7,6 +7,7 @@ from django.contrib.admin.helpers import ActionForm
 from django import forms
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
 from django.contrib.admin.options import get_content_type_for_model
+from simple_history.admin import SimpleHistoryAdmin
 
 
 class CityFilter(admin.SimpleListFilter):
@@ -90,7 +91,7 @@ class AddSubQuantityForm(ActionForm):
 
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(SimpleHistoryAdmin):
     list_display = (
         "image_thumbnail",
         "name",
@@ -103,6 +104,7 @@ class ProductAdmin(admin.ModelAdmin):
     actions = ["add_or_subtract", "delete"]
     action_form = AddSubQuantityForm
     list_filter = ("category", CityFilter)
+    history_list_display = ["status"]
 
     def price_for_all(self, obj):
         return obj.price * obj.quantity
@@ -138,7 +140,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 @admin.register(CartItem)
-class CartItemAdmin(admin.ModelAdmin):
+class CartItemAdmin(SimpleHistoryAdmin):
     list_display = (
         "order_id",
         "image_thumbnail",

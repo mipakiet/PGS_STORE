@@ -4,6 +4,7 @@ from django_jsonform.models.fields import JSONField
 import os
 from uuid import uuid4
 from django.utils.translation import gettext_lazy as _
+from simple_history.models import HistoricalRecords
 
 
 class Category(models.Model):
@@ -65,6 +66,7 @@ class Product(models.Model):
     quantity = models.PositiveIntegerField(default=0)
 
     spec = JSONField(schema=get_schema, null=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.name
@@ -85,3 +87,4 @@ class CartItem(models.Model):
     bill = models.BooleanField(default=False)
     released = models.BooleanField(default=False)
     released_date = models.DateField(null=True, blank=True)
+    history = HistoricalRecords()

@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "django_jsonform",
     "django_cleanup.apps.CleanupConfig",
+    "simple_history",
     "cart",
     "product",
 ]
@@ -37,6 +38,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
 ROOT_URLCONF = "PGS_store.urls"
