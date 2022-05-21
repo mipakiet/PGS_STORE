@@ -182,8 +182,8 @@ def buy(request):
             price=item["price"],
         )
         if request.GET.get("company"):
-            cart_item.company_name = (request.GET.get("company_name"),)
-            cart_item.nip = (request.GET.get("nip"),)
+            cart_item.company_name = request.GET.get("company_name")
+            cart_item.nip = request.GET.get("nip")
 
         cart_item.save()
 
