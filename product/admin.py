@@ -88,8 +88,19 @@ class AddSubQuantityForm(ActionForm):
     quantity = forms.IntegerField(required=False)
 
 
+class ProductForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["spec"].required = False
+
+    class Meta:
+        model = Product
+        fields = "__all__"
+
+
 @admin.register(Product)
 class ProductAdmin(SimpleHistoryAdmin):
+    form = ProductForm
     list_display = (
         "image_thumbnail",
         "name",

@@ -1,6 +1,8 @@
 {% extends 'admin/base.html' %}
 
-{% block extrastyle %}{{ block.super }}
+{% block branding %}
+{% block extrastyle %}
+{{ block.super }}
 
 <style>
 :root {
@@ -11,5 +13,10 @@
 
   --accent: #fff;
 }
+.required label, label.required {
+  text-decoration: underline;
+  font-weight: normal !important;
+}
 </style>
+{% endblock %}
 {% endblock %}
