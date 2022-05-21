@@ -66,9 +66,9 @@ class ReleasedFilter(admin.SimpleListFilter):
             return queryset
 
 
-class BillFilter(admin.SimpleListFilter):
-    title = "bill"
-    parameter_name = "bill"
+class BilledFilter(admin.SimpleListFilter):
+    title = "billed"
+    parameter_name = "billed"
 
     def lookups(self, request, model_admin):
         return ((True, "Yes"), (False, "No"))
@@ -79,7 +79,7 @@ class BillFilter(admin.SimpleListFilter):
             return queryset
         value = self.value()
         if value is not None:
-            return queryset.filter(bill=value)
+            return queryset.filter(billed=value)
         else:
             return queryset
 
@@ -154,7 +154,7 @@ class CartItemAdmin(SimpleHistoryAdmin):
         "order_id",
         "image_thumbnail",
         "order_date",
-        "bill",
+        "billed",
         "released",
         "released_date",
         "city",
@@ -167,8 +167,9 @@ class CartItemAdmin(SimpleHistoryAdmin):
         "price",
         "price_for_all",
     )
-    list_filter = (CityFilter, CategoryFilter, ReleasedFilter, BillFilter)
+    list_filter = (CityFilter, CategoryFilter, ReleasedFilter, BilledFilter)
     actions = ["release", "bill", "cancel"]
+    history_list_display = ["released", "billed"]
 
     def price_for_all(self, obj):
         return obj.quantity * obj.price
@@ -189,12 +190,12 @@ class CartItemAdmin(SimpleHistoryAdmin):
 
     def bill(self, request, queryset):
         for obj in queryset:
-            obj.bill = True
+            obj.billed = True
             obj.save()
 
     def cancel(self, request, queryset):
         for obj in queryset:
-            if obj.released or obj.bill:
+            if obj.released or obj.billed:
                 messages.add_message(
                     request,
                     messages.ERROR,
@@ -239,8 +240,7 @@ class CartItemAdmin(SimpleHistoryAdmin):
         #     product = obj.product
         #     product.quantity += obj.quantity
         #     product.save()
-
-        super().delete_model(request, obj)
+        # super().delete_model(request, obj)
 
     def has_delete_permission(self, request, obj=None):
         return False
