@@ -224,12 +224,15 @@ class CartItemAdmin(SimpleHistoryAdmin):
         obj.user = request.user
         super().save_model(request, obj, form, change)
 
-    def delete_model(self, request, obj):
-        product = obj.product
-        product.quantity += obj.quantity
-        product.save()
+        # def delete_model(self, request, obj):
+        #     product = obj.product
+        #     product.quantity += obj.quantity
+        #     product.save()
 
         super().delete_model(request, obj)
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(Specification)
