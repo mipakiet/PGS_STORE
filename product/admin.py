@@ -194,6 +194,43 @@ class CartItemAdmin(SimpleHistoryAdmin):
                 obj.product.save()
                 obj.delete()
 
+    def save_model(self, request, obj, form, change):
+        if change:
+            cart_item_to_change = CartItem.objects.get(id=obj.id)
+            difference = obj.quantity - cart_item_to_change.quantity
+
+            if obj.product.quantity - difference < 0:
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    f"{obj.product.name} nie ma wystarczającej ilości",
+                )
+                return
+            product = obj.product
+            product.quantity -= difference
+            product.save()
+        else:
+            if obj.product.quantity - obj.quantity < 0:
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    f"{obj.product.name} nie ma wystarczającej ilości",
+                )
+                return
+            product = obj.product
+            product.quantity -= obj.quantity
+            product.save()
+
+        obj.user = request.user
+        super().save_model(request, obj, form, change)
+
+    def delete_model(self, request, obj):
+        product = obj.product
+        product.quantity += obj.quantity
+        product.save()
+
+        super().delete_model(request, obj)
+
 
 @admin.register(Specification)
 class SpecificationAdmin(admin.ModelAdmin):
