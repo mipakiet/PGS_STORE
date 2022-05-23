@@ -5,6 +5,7 @@ import os
 from uuid import uuid4
 from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
+from django.core.validators import MinValueValidator
 
 
 class Category(models.Model):
@@ -57,11 +58,11 @@ class Product(models.Model):
 
     name = models.CharField(max_length=30)
     description = models.TextField(null=True, blank=True)
-    price = models.DecimalField(decimal_places=2, max_digits=7)
-    image = models.ImageField(upload_to=path_and_rename)
-    category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, null=True, blank=True
+    price = models.DecimalField(
+        decimal_places=2, max_digits=7, validators=[MinValueValidator(0)]
     )
+    image = models.ImageField(upload_to=path_and_rename)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     city = models.CharField(max_length=3, choices=City.choices, default=City.Wroclaw)
     quantity = models.PositiveIntegerField(default=0)
 
