@@ -115,6 +115,12 @@ class ProductAdmin(SimpleHistoryAdmin):
     list_filter = ("category", CityFilter)
     history_list_display = ["status"]
 
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            return ["quantity"]
+        else:
+            return []
+
     def price_for_all(self, obj):
         return obj.price * obj.quantity
 
