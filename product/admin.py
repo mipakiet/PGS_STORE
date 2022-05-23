@@ -157,6 +157,7 @@ class ProductAdmin(SimpleHistoryAdmin):
 @admin.register(CartItem)
 class CartItemAdmin(SimpleHistoryAdmin):
     list_display = (
+        "id",
         "order_id",
         "image_thumbnail",
         "order_date",
@@ -176,6 +177,8 @@ class CartItemAdmin(SimpleHistoryAdmin):
     list_filter = (CityFilter, CategoryFilter, ReleasedFilter, BilledFilter)
     actions = ["release", "bill", "cancel"]
     history_list_display = ["released", "billed"]
+    exclude = ["order_id"]
+    readonly_fields = ["released", "billed", "released_date"]
 
     def price_for_all(self, obj):
         return obj.quantity * obj.price
@@ -224,10 +227,8 @@ class CartItemAdmin(SimpleHistoryAdmin):
                     f"{obj.product.name} nie ma wystarczającej ilości",
                 )
                 return
-            product = obj.product
-            product.quantity -= difference
-            product.save()
         else:
+            obj.order_id = CartItem.objects.last().order_id + 1
             if obj.product.quantity - obj.quantity < 0:
                 messages.add_message(
                     request,
@@ -235,9 +236,10 @@ class CartItemAdmin(SimpleHistoryAdmin):
                     f"{obj.product.name} nie ma wystarczającej ilości",
                 )
                 return
-            product = obj.product
-            product.quantity -= obj.quantity
-            product.save()
+
+        product = obj.product
+        product.quantity -= obj.quantity
+        product.save()
 
         obj.user = request.user
         super().save_model(request, obj, form, change)
