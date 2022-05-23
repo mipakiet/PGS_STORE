@@ -89,3 +89,6 @@ class CartItem(models.Model):
     released = models.BooleanField(default=False)
     released_date = models.DateField(null=True, blank=True)
     history = HistoricalRecords()
+
+    def __str__(self):
+        return "Order number: " + str(self.id)
