@@ -258,7 +258,18 @@ class CartItemAdmin(SimpleHistoryAdmin):
         # super().delete_model(request, obj)
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        if request.user.is_staff:
+            if request.user.is_superuser:
+                return True
+            else:
+                return False
+
+    def get_readonly_fields(self, request, obj=None):
+        if request.user.is_staff:
+            if request.user.is_superuser:
+                return []
+            else:
+                return ["released", "billed", "released_date"]
 
 
 @admin.register(Specification)
