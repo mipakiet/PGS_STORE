@@ -159,6 +159,7 @@ class CartItemAdmin(SimpleHistoryAdmin):
     list_display = (
         "id",
         "order_id",
+        "product_name",
         "image_thumbnail",
         "order_date",
         "billed",
@@ -180,6 +181,10 @@ class CartItemAdmin(SimpleHistoryAdmin):
     exclude = ["order_id"]
     readonly_fields = ["released", "billed", "released_date"]
 
+    # displayed name
+    def product_name(self, obj):
+        return obj.product.name
+
     def price_for_all(self, obj):
         return obj.quantity * obj.price
 
@@ -191,6 +196,7 @@ class CartItemAdmin(SimpleHistoryAdmin):
             f'<img src="{obj.product.image.url}" width="150" height="100" />'
         )
 
+    # actions
     def release(self, request, queryset):
         for obj in queryset:
             obj.released_date = date.today()
@@ -215,6 +221,7 @@ class CartItemAdmin(SimpleHistoryAdmin):
                 obj.product.save()
                 obj.delete()
 
+    # change behavior
     def save_model(self, request, obj, form, change):
         if change:
             cart_item_to_change = CartItem.objects.get(id=obj.id)
