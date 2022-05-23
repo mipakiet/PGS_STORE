@@ -76,9 +76,9 @@ class Product(models.Model):
 class CartItem(models.Model):
     order_id = models.PositiveIntegerField(default=0)
     employee_name = models.CharField(max_length=50)
-    login = models.CharField(max_length=50)
-    address = models.CharField(max_length=50)
-    company_name = models.CharField(max_length=50, blank=True)
+    login = models.CharField(max_length=25)
+    address = models.CharField(max_length=60)
+    company_name = models.CharField(max_length=30, blank=True)
     nip = models.CharField(max_length=10, blank=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
