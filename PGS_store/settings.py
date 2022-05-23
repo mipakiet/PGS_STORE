@@ -4,6 +4,7 @@ import os
 VERSION = "0.1.5"
 
 SERVER = False
+DEBUG = False
 
 try:
     from local_settings import *
@@ -109,8 +110,7 @@ if SERVER:
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 else:
     STATIC_URL = "/static/"
-    STATIC_ROOT = os.path.join(BASE_DIR, "static")
-
+    STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
     MEDIA_URL = "/media/"
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
