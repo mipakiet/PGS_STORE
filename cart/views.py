@@ -99,6 +99,7 @@ def item_clear(request, id):
     cart = Cart(request)
     product = Product.objects.get(id=id)
     cart.remove(product)
+    messages.success(request, (f"Produkt {product.name} został wyjęty z koszyka"))
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 
