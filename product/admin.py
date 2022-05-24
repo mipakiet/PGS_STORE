@@ -114,6 +114,7 @@ class ProductAdmin(SimpleHistoryAdmin):
     action_form = AddSubQuantityForm
     list_filter = ("category", CityFilter)
     history_list_display = ["status"]
+    list_per_page = 10
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -180,6 +181,7 @@ class CartItemAdmin(SimpleHistoryAdmin):
     history_list_display = ["released", "billed"]
     exclude = ["order_id"]
     readonly_fields = ["released", "billed", "released_date"]
+    list_per_page = 10
 
     # displayed name
     def product_name(self, obj):
