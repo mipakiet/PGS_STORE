@@ -236,6 +236,9 @@ class CartItemAdmin(SimpleHistoryAdmin):
                     f"{obj.product.name} nie ma wystarczającej ilości",
                 )
                 return
+
+            product = obj.product
+            product.quantity -= difference
         else:
             obj.order_id = CartItem.objects.last().order_id + 1
             if obj.product.quantity - obj.quantity < 0:
@@ -246,8 +249,8 @@ class CartItemAdmin(SimpleHistoryAdmin):
                 )
                 return
 
-        product = obj.product
-        product.quantity -= obj.quantity
+            product = obj.product
+            product.quantity -= obj.quantity
         product.save()
 
         obj.user = request.user
