@@ -253,7 +253,6 @@ class CartItemAdmin(SimpleHistoryAdmin):
     # change behavior
     def save_model(self, request, obj, form, change):
 
-        print(list(messages.get_messages(request)))
         if change:
             cart_item_to_change = CartItem.objects.get(id=obj.id)
             difference = obj.quantity - cart_item_to_change.quantity
