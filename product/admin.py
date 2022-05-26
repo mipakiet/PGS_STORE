@@ -155,6 +155,32 @@ class ProductAdmin(SimpleHistoryAdmin):
         return mark_safe(f'<img src="{obj.image.url}" width="150" height="100" />')
 
 
+class CartItemForm(forms.ModelForm):
+    class Meta:
+        model = CartItem
+        fields = "__all__"
+
+    def clean(self):
+        super(CartItemForm, self).clean()
+
+        # get data
+        product_quantity = self.cleaned_data.get("product").quantity
+        quantity = self.cleaned_data.get("quantity")
+
+        # check is object editing
+        if self.instance.pk is None:
+            if product_quantity - quantity < 0:
+                self._errors["quantity"] = self.error_class(
+                    ["Product don't have that much quantity"]
+                )
+        else:
+            if product_quantity - (quantity - self.instance.quantity) < 0:
+                self._errors["quantity"] = self.error_class(
+                    ["Product don't have that much quantity"]
+                )
+        return self.cleaned_data
+
+
 @admin.register(CartItem)
 class CartItemAdmin(SimpleHistoryAdmin):
     list_display = (
@@ -182,6 +208,7 @@ class CartItemAdmin(SimpleHistoryAdmin):
     exclude = ["order_id"]
     readonly_fields = ["released", "billed", "released_date"]
     list_per_page = 10
+    form = CartItemForm
 
     # displayed name
     def product_name(self, obj):
@@ -225,6 +252,8 @@ class CartItemAdmin(SimpleHistoryAdmin):
 
     # change behavior
     def save_model(self, request, obj, form, change):
+
+        print(list(messages.get_messages(request)))
         if change:
             cart_item_to_change = CartItem.objects.get(id=obj.id)
             difference = obj.quantity - cart_item_to_change.quantity
@@ -236,9 +265,11 @@ class CartItemAdmin(SimpleHistoryAdmin):
                     f"{obj.product.name} nie ma wystarczającej ilości",
                 )
                 return
+            else:
+                product = obj.product
+                product.quantity -= difference
+                product.save()
 
-            product = obj.product
-            product.quantity -= difference
         else:
             obj.order_id = CartItem.objects.last().order_id + 1
             if obj.product.quantity - obj.quantity < 0:
@@ -248,13 +279,13 @@ class CartItemAdmin(SimpleHistoryAdmin):
                     f"{obj.product.name} nie ma wystarczającej ilości",
                 )
                 return
-
-            product = obj.product
-            product.quantity -= obj.quantity
-        product.save()
+            else:
+                product = obj.product
+                product.quantity -= obj.quantity
+                product.save()
 
         obj.user = request.user
-        super().save_model(request, obj, form, change)
+        super(CartItemAdmin, self).save_model(request, obj, form, change)
 
         # def delete_model(self, request, obj):
         #     product = obj.product
