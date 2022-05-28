@@ -81,7 +81,7 @@ class CartItem(models.Model):
     company_name = models.CharField(max_length=30, blank=True)
     nip = models.CharField(max_length=10, blank=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
     price = models.DecimalField(decimal_places=2, max_digits=7)
     order_date = models.DateField(auto_now_add=True)
 

@@ -163,6 +163,10 @@ class CartItemForm(forms.ModelForm):
     def clean(self):
         super(CartItemForm, self).clean()
 
+        if not self.cleaned_data.get("product") or not self.cleaned_data.get(
+            "quantity"
+        ):
+            return self.cleaned_data
         # get data
         product_quantity = self.cleaned_data.get("product").quantity
         quantity = self.cleaned_data.get("quantity")
