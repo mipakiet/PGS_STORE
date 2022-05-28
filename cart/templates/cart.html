@@ -124,24 +124,32 @@
       if (checkbox.checked) {
           company_div.style.visibility = 'visible';
           company_name.required = true;
+          company_name.disabled = false;
           nip.required = true;
+          nip.disabled = false;
       } else {
           company_div.style.visibility = 'hidden';
           company_name.required = false;
+          company_name.disabled = true;
           nip.required = false;
+          nip.disabled = true;
 
       }
 
   });
   if (checkbox.checked) {
       company_div.style.visibility = 'visible';
-      company_name.required = true;
-      nip.required = true;
+          company_name.required = true;
+          company_name.disabled = false;
+          nip.required = true;
+          nip.disabled = false;
 
   } else {
       company_div.style.visibility = 'hidden';
-      company_name.required = false;
-      nip.required = false;
+          company_name.required = false;
+          company_name.disabled = true;
+          nip.required = false;
+          nip.disabled = true;
   }
 </script>
 {% endblock %}
