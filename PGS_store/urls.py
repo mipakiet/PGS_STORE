@@ -8,6 +8,9 @@ from django.conf.urls.static import static
 from product.views import *
 from cart.urls import cart_urlpatterns
 
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.views.generic.base import RedirectView
+
 handler400 = "product.views.handler400"
 handler403 = "product.views.handler403"
 handler404 = "product.views.handler404"
@@ -15,6 +18,10 @@ handler500 = "product.views.handler500"
 
 urlpatterns = (
     [
+        path(
+            "favicon.ico",
+            RedirectView.as_view(url=staticfiles_storage.url("favicon.ico")),
+        ),
         path("admin/", admin.site.urls),
         path("", index, name="home"),
         path("category/<int:id>/", category, name="category"),
