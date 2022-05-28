@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+{% block content %}
+{% load product_tag %}
+
+  <div class="container">
+    <div class="p-4 mb-3 bg-light">
+      <span class="fs-3">Szukasz "{{look_for}}"</span><span class="fs-6 text-muted">({{amount_of_products}} ofert)</span>
+    </div>
+  </div>
+  <div class="content">
+    <div class="container">
+      <div class="row h-100">
+        <div class="col-md-12 col-xl-3">
+          <div class="container bg-light p-4 h-100">
+            <form action="" method="GET">
+
+              <input type='hidden' value='T' name='get'>
+
+              <h3 class="mb-3">Sortuj</h3>
+              <select class="form-select" name="order">
+                  {% if order == 4 %}
+                  <option value="1">Cena rosnąco</option>
+                  <option value="2">Cena malejąco</option>
+                  <option value="3">Nazwa A-Z</option>
+                  <option value="4" selected>Nazwa Z-A</option>
+                  {% elif order == 2 %}
+                  <option value="1">Cena rosnąco</option>
+                  <option value="2" selected>Cena malejąco</option>
+                  <option value="3">Nazwa A-Z</option>
+                  <option value="4">Nazwa Z-A</option>
+                  {% elif order == 3 %}
+                  <option value="1">Cena rosnąco</option>
+                  <option value="2">Cena malejąco</option>
+                  <option value="3" selected>Nazwa A-Z</option>
+                  <option value="4">Nazwa Z-A</option>
+                  {% else %}
+                  <option value="1" selected>Cena rosnąco</option>
+                  <option value="2">Cena malejąco</option>
+                  <option value="3">Nazwa A-Z</option>
+                  <option value="4">Nazwa Z-A</option>
+                  {% endif %}
+              </select>
+
+              <h3 class="my-3">Cena</h3>
+              Od
+              <div class="input-group mb-3">
+                <input type="number" step="any" name="priceMin" min="0" class="form-control" value="{{priceMin}}">
+                <span class="input-group-text">zł</span>
+              </div>
+              Do
+              <div class="input-group mb-3">
+                <input type="number" step=".01" name="priceMax" min="0" class="form-control" value="{{priceMax}}">
+                <span class="input-group-text">zł</span>
+              </div>
+
+              <h3 class="my-3">Miasto</h3>
+              <div class="form-check">
+                {% if cityWro == 'T' %}
+                <input class="form-check-input mt-2" name="cityWro" value="T" type="checkbox" id="flexCheckCheckedWRO" style="width: 20px; height: 20px;" checked>
+                {% else %}
+                <input class="form-check-input mt-2" name="cityWro" value="T" type="checkbox" id="flexCheckCheckedWRO" style="width: 20px; height: 20px;">
+                {% endif %}
+                <label class="form-check-label ms-2 fs-5 mt-1" for="flexCheckCheckedWRO">
+                  Wrocław
+                </label>
+              </div>
+              <div class="form-check">
+                {% if cityGda == 'T' %}
+                <input class="form-check-input mt-2" name="cityGda" value="T" type="checkbox" id="flexCheckCheckedGDA" style="width: 20px; height: 20px;" checked>
+                {% else %}
+                <input class="form-check-input mt-2" name="cityGda" value="T" type="checkbox" id="flexCheckCheckedGDA" style="width: 20px; height: 20px;">
+                {% endif %}
+                <label class="form-check-label ms-2 fs-5 mt-1" for="flexCheckCheckedGDA">
+                  Gdańsk
+                </label>
+              </div>
+              <div class="form-check">
+                {% if cityRze == 'T' %}
+                <input class="form-check-input mt-2" name="cityRze" value="T" type="checkbox" id="flexCheckCheckedRZE" style="width: 20px; height: 20px;" checked>
+                {% else %}
+                <input class="form-check-input mt-2" name="cityRze" value="T" type="checkbox" id="flexCheckCheckedRZE" style="width: 20px; height: 20px;">
+                {% endif %}
+                <label class="form-check-label ms-2 fs-5 mt-1" for="flexCheckCheckedRZE">
+                  Rzeszów
+                </label>
+              </div>
+              <input type="text" name="look_for" value="{{look_for}}" class="h-0 m-0 p-0" style="visibility:hidden;">
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary text-white mt-3 mw-100">Filtruj</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-md-12 col-xl-9">
+          <div class="container bg-light p-3 h-100 d-flex flex-column">
+            {%if page_obj %}
+            {% for object in page_obj %}
+
+            <div class="container product_list py-3">
+              <a class="text-decoration-none text-dark" href="/product/{{object.id}}">
+                <div class="row">
+                  <div class="col col-md-4 col-12 p-0 d-flex justify-content-center">
+                      <img class="img-list" src="{{object.image.url}}" alt="" style="object-fit: fill;" height="210" width="280">
+                  </div>
+                  <div class="col col-md-8 col-12">
+                    <div class="container m-0 p-0 h-100 d-flex flex-column">
+                      <div class="row">
+                        <span class="fs-2 mb-0">{{object.name}}</span><br/>
+                        <span class="fs-6 mb-0">{{object.city|city_name}}</span><br/>
+                        <div><span class="price fs-3">{{object.price|price}}</span><span class="price fs-5">,{{object.price|price:False}} zł</span></div>
+
+                      </div>
+                      <div class="row mt-auto" >
+                        <div class="col col-6">
+
+                        </div>
+                        <div class="col col-6 text-end text-muted ">
+                          {{object.quantity}} sztuk
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </a>
+
+            </div>
+            {% if not forloop.last %}
+              <div class="border border-bottom border-1 rounded-3"></div>
+            {% endif %}
+            {% endfor %}
+            <nav class="mt-auto">
+              <ul class="pagination mb-0 mt-2 justify-content-center">
+                {%if page_obj.has_previous %}
+                <li class="page-item">
+                  {% if 'get' in request.get_full_path %}
+                  <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.previous_page_number}}" aria-label="Previous1">Poprzednia</a>
+                  {% else %}
+                  <a class="page-link text-black" href="?page={{page_obj.previous_page_number}}" aria-label="Previous1">Poprzednia</a>
+                  {% endif %}
+                </li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link text-black" href="#" aria-label="Previous1"><span class="text-muted">Poprzednia</span></a></li>
+                {% endif %}
+
+                {%if page_obj.number == 3 %}
+                <li class="page-item">
+                  {% if 'get' in request.get_full_path %}
+                  <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.2}}">1</a>
+                  {% else %}
+                  <a class="page-link text-black" href="?page={{page_obj.1}}">1</a>
+                  {% endif %}
+                </li>
+                {% endif %}
+
+                {%if page_obj.number > 3 %}
+                <li class="page-item">
+                  {% if 'get' in request.get_full_path %}
+                  <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.1}}" aria-label="Last">1</a>
+                  {% else %}
+                  <a class="page-link text-black" href="?page={{page_obj.1}}" aria-label="Last">1</a>
+                  {% endif %}
+                </li>
+                <li class="page-item disabled"><a class="page-link text-black" href="#">...</a></li>
+                {% endif %}
+
+                {%if page_obj.has_previous %}
+                <li class="page-item">
+                  {% if 'get' in request.get_full_path %}
+                  <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.previous_page_number}}" aria-label="Previous2">{{page_obj.previous_page_number}}</a>
+                  {% else %}
+                  <a class="page-link text-black" href="?page={{page_obj.previous_page_number}}" aria-label="Previous2">{{page_obj.previous_page_number}}</a>
+                  {% endif %}
+                </li>
+                {% endif %}
+
+                <li class="page-item active" aria-current="page">
+                  <span class="page-link">{{page_obj.number}}</span>
+                </li>
+
+                {%if page_obj.has_next %}
+                <li class="page-item">
+                  {% if 'get' in request.get_full_path %}
+                  <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.next_page_number}}" aria-label="Next1">{{page_obj.next_page_number}}</a>
+                  {% else %}
+                  <a class="page-link text-black" href="?page={{page_obj.next_page_number}}" aria-label="Next1">{{page_obj.next_page_number}}</a>
+                  {% endif %}
+                </li>
+                {% endif %}
+
+                {%if page_obj.paginator.num_pages|sub:2 > page_obj.number  %}
+                <li class="page-item disabled"><a class="page-link text-black" href="#">...</a></li>
+
+                <li class="page-item">
+                  {% if 'get' in request.get_full_path %}
+                  <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.paginator.num_pages}}" aria-label="Last">{{page_obj.paginator.num_pages}}</a>
+                  {% else %}
+                  <a class="page-link text-black" href="?page={{page_obj.paginator.num_pages}}" aria-label="Last">{{page_obj.paginator.num_pages}}</a>
+                  {% endif %}
+                </li>
+                {% endif %}
+
+
+                {%if page_obj.paginator.num_pages|sub:2 == page_obj.number %}
+                <li class="page-item">
+                  {% if 'get' in request.get_full_path %}
+                  <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.paginator.num_pages}}">{{page_obj.paginator.num_pages}}</a>
+                  {% else %}
+                  <a class="page-link text-black" href="?page={{page_obj.paginator.num_pages}}">{{page_obj.paginator.num_pages}}</a>
+                  {% endif %}
+                </li>
+                {% endif %}
+
+                {%if page_obj.has_next %}
+                <li class="page-item">
+                  {% if 'get' in request.get_full_path %}
+                  <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.next_page_number}}" aria-label="Next2">Następna</a>
+                  {% else %}
+                  <a class="page-link text-black" href="?page={{page_obj.next_page_number}}" aria-label="Next2">Następna</a>
+                  {% endif %}
+                </li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link text-black" href="#" aria-label="Next2"><span class="text-muted">Następna</span></a></li>
+                {% endif %}
+              </ul>
+            </nav>
+
+            {% else %}
+              <p class="text-center mt-3">Nie ma takich produktów</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

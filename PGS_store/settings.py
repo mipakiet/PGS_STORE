@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 
-VERSION = "0.1.9"
+VERSION = "0.2.0"
 
 SERVER = False
 DEBUG = False

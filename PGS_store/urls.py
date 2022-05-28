@@ -21,6 +21,7 @@ urlpatterns = (
         path("product/<int:id>/", product, name="product"),
         path("__debug__/", include("debug_toolbar.urls")),
         path("regulamin/", statute, name="statute"),
+        path("search", search, name="search"),
     ]
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
