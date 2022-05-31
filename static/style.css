@@ -73,3 +73,14 @@ body {
     font-family: 'Roboto', sans-serif;
     color: #3a4e58;
 }
+
+.back_button{
+    border: none;
+    background: #f8f9fa;
+}
+
+.back_button:hover{
+    color: #fd7e14;
+    cursor: pointer;
+    background: #f8f9fa;
+}

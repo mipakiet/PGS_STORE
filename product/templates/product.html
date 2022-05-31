@@ -4,9 +4,16 @@
 
   <div class="content">
     <div class="container">
-        <div class="container bg-light p-5">
+        <div class="container bg-light p-5 pt-3 ps-3">
+            <div class="">
+                <button class="back_button" onclick="history.back()">
+                <span class="material-symbols-outlined " style="font-size:40px;">
+                arrow_back
+                </span>
+                </button>
+            </div>
             {%if product_object %}
-            <div class="row">
+            <div class="row p-5 pt-2 ps-3">
                 <div class="col-xl-8 col-12 text-center">
                     <img src="{{product_object.image.url}}" alt="" style="height:450px; max-width: 100%; ">
                 </div>
