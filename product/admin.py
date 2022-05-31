@@ -102,8 +102,8 @@ class ProductForm(forms.ModelForm):
 class ProductAdmin(SimpleHistoryAdmin):
     form = ProductForm
     list_display = (
-        "image_thumbnail",
         "name",
+        "image_thumbnail",
         "city",
         "quantity",
         "price",
@@ -115,6 +115,7 @@ class ProductAdmin(SimpleHistoryAdmin):
     list_filter = ("category", CityFilter)
     history_list_display = ["status"]
     list_per_page = 10
+    search_fields = ["name", "description"]
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -198,10 +199,6 @@ class CartItemAdmin(SimpleHistoryAdmin):
         "released_date",
         "city",
         "employee_name",
-        "login",
-        "address",
-        "nip",
-        "company_name",
         "quantity",
         "price",
         "price_for_all",
@@ -213,6 +210,7 @@ class CartItemAdmin(SimpleHistoryAdmin):
     readonly_fields = ["released", "billed", "released_date"]
     list_per_page = 10
     form = CartItemForm
+    search_fields = ["employee_name", "login", "address", "nip", "company_name"]
 
     # displayed name
     def product_name(self, obj):
