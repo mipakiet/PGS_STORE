@@ -19,20 +19,12 @@
 <body>
     <header class="container my-3">
         <div class="row m-0 p-0">
-            <div class="col col-md-3 m-0 p-0">
+            <div class="col-8 col-lg-3 order-lg-1 m-0 p-0">
                 <a href="/">
                     <img src="{% static '/pgsLogo.png' %}" alt="" style="height: 70px; width: auto;">
                 </a>
             </div>
-            <div class="col col-md-7 text-end  m-0 p-0">
-                <form action="{% url 'search' %}" class="mt-3" method="GET">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="czego szukasz?" name="look_for">
-                        <input class="btn btn-primary text-white" type="submit" value="SZUKAJ">
-                    </div>
-                </form>
-            </div>
-            <div class="col col-md-2 text-end position-relative m-0 p-0">
+            <div class="col-4 col-lg-2 order-lg-3 text-end position-relative m-0 p-0">
                 <form action="{% url 'cart' %}" class=" position-absolute top-50 end-0 translate-middle-y" style="margin-right: -10px;">
                     <button class="orange_button position-relative" type="submit">
                         {% if request.session.cart.items %}
@@ -41,6 +33,14 @@
                         {% endif %}
                         <i class="material-icons" style=" font-size: 50px; ">&#xf1cc;</i>
                     </button>
+                </form>
+            </div>
+            <div class="col-12 col-lg-7 order-lg-2 text-end  m-0 p-0">
+                <form action="{% url 'search' %}" class="mt-3" method="GET">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="czego szukasz?" name="look_for">
+                        <input class="btn btn-primary text-white" type="submit" value="SZUKAJ">
+                    </div>
                 </form>
             </div>
         </div>
