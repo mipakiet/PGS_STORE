@@ -10,8 +10,6 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from email.mime.image import MIMEImage
-from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
-from django.contrib.admin.options import get_content_type_for_model
 
 
 def check_cart_with_db(request):
@@ -224,18 +222,28 @@ def send_email(request):
     )
     msg.attach_alternative(html_content, "text/html")
 
+    html_content_admin = render_to_string("mail_summary_admin.html", context)
+    text_content_admin = strip_tags(html_content)
+    admin_msg = EmailMultiAlternatives(
+        "Zamówienie w PGS store", text_content_admin, to=[settings.ADMIN_DL]
+    )
+    admin_msg.attach_alternative(html_content_admin, "text/html")
+
     with open("static/pgsLogo.png", mode="rb") as f:
         image = MIMEImage(f.read())
-        msg.attach(image)
         image.add_header("Content-ID", "<pgsLogo>")
+        msg.attach(image)
+        admin_msg.attach(image)
 
     for key, item in request.session.get(settings.CART_SESSION_ID).items():
         with open(item["image"][1:], mode="rb") as f:
             image = MIMEImage(f.read())
-            msg.attach(image)
             image.add_header("Content-ID", f"<{item['product_id']}>")
+            msg.attach(image)
+            admin_msg.attach(image)
     try:
         msg.send()
+        admin_msg.send()
         return True
     except:
         messages.success(request, ("Nastąpił błąd z wysyłaniem maila"))

@@ -5,6 +5,7 @@ VERSION = "0.2.2"
 
 SERVER = False
 DEBUG = False
+ADMIN_DL = ""
 
 try:
     from local_settings import *
