@@ -133,11 +133,7 @@
               <ul class="pagination mb-0 mt-2 justify-content-center">
                 {%if page_obj.has_previous %}
                 <li class="page-item">
-                  {% if 'get' in request.get_full_path %}
                   <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.previous_page_number}}" aria-label="Previous1">Poprzednia</a>
-                  {% else %}
-                  <a class="page-link text-black" href="?page={{page_obj.previous_page_number}}" aria-label="Previous1">Poprzednia</a>
-                  {% endif %}
                 </li>
                 {% else %}
                 <li class="page-item disabled"><a class="page-link text-black" href="#" aria-label="Previous1"><span class="text-muted">Poprzednia</span></a></li>
@@ -145,32 +141,20 @@
 
                 {%if page_obj.number == 3 %}
                 <li class="page-item">
-                  {% if 'get' in request.get_full_path %}
                   <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.2}}">1</a>
-                  {% else %}
-                  <a class="page-link text-black" href="?page={{page_obj.1}}">1</a>
-                  {% endif %}
                 </li>
                 {% endif %}
 
                 {%if page_obj.number > 3 %}
                 <li class="page-item">
-                  {% if 'get' in request.get_full_path %}
                   <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.1}}" aria-label="Last">1</a>
-                  {% else %}
-                  <a class="page-link text-black" href="?page={{page_obj.1}}" aria-label="Last">1</a>
-                  {% endif %}
                 </li>
                 <li class="page-item disabled"><a class="page-link text-black" href="#">...</a></li>
                 {% endif %}
 
                 {%if page_obj.has_previous %}
                 <li class="page-item">
-                  {% if 'get' in request.get_full_path %}
                   <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.previous_page_number}}" aria-label="Previous2">{{page_obj.previous_page_number}}</a>
-                  {% else %}
-                  <a class="page-link text-black" href="?page={{page_obj.previous_page_number}}" aria-label="Previous2">{{page_obj.previous_page_number}}</a>
-                  {% endif %}
                 </li>
                 {% endif %}
 
@@ -180,11 +164,7 @@
 
                 {%if page_obj.has_next %}
                 <li class="page-item">
-                  {% if 'get' in request.get_full_path %}
                   <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.next_page_number}}" aria-label="Next1">{{page_obj.next_page_number}}</a>
-                  {% else %}
-                  <a class="page-link text-black" href="?page={{page_obj.next_page_number}}" aria-label="Next1">{{page_obj.next_page_number}}</a>
-                  {% endif %}
                 </li>
                 {% endif %}
 
@@ -192,32 +172,20 @@
                 <li class="page-item disabled"><a class="page-link text-black" href="#">...</a></li>
 
                 <li class="page-item">
-                  {% if 'get' in request.get_full_path %}
                   <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.paginator.num_pages}}" aria-label="Last">{{page_obj.paginator.num_pages}}</a>
-                  {% else %}
-                  <a class="page-link text-black" href="?page={{page_obj.paginator.num_pages}}" aria-label="Last">{{page_obj.paginator.num_pages}}</a>
-                  {% endif %}
                 </li>
                 {% endif %}
 
 
                 {%if page_obj.paginator.num_pages|sub:2 == page_obj.number %}
                 <li class="page-item">
-                  {% if 'get' in request.get_full_path %}
                   <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.paginator.num_pages}}">{{page_obj.paginator.num_pages}}</a>
-                  {% else %}
-                  <a class="page-link text-black" href="?page={{page_obj.paginator.num_pages}}">{{page_obj.paginator.num_pages}}</a>
-                  {% endif %}
                 </li>
                 {% endif %}
 
                 {%if page_obj.has_next %}
                 <li class="page-item">
-                  {% if 'get' in request.get_full_path %}
                   <a class="page-link text-black" href="{{ request.get_full_path }}&page={{page_obj.next_page_number}}" aria-label="Next2">Następna</a>
-                  {% else %}
-                  <a class="page-link text-black" href="?page={{page_obj.next_page_number}}" aria-label="Next2">Następna</a>
-                  {% endif %}
                 </li>
                 {% else %}
                 <li class="page-item disabled"><a class="page-link text-black" href="#" aria-label="Next2"><span class="text-muted">Następna</span></a></li>
