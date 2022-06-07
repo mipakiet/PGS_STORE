@@ -4,7 +4,7 @@
 
   <div class="content">
     <div class="container">
-        <div class="container bg-light p-5 pt-3 ps-3">
+        <div class="container bg-light pt-3 pb-4">
             <div class="">
                 <button class="back_button" onclick="history.back()">
                 <span class="material-symbols-outlined " style="font-size:40px;">
@@ -13,7 +13,7 @@
                 </button>
             </div>
             {%if product_object %}
-            <div class="row p-5 pt-2 ps-3">
+            <div class="row py-2 px-4">
                 <div class="col-xl-8 col-12 text-center">
                     <img src="{{product_object.image.url}}" alt="" style="height:450px; max-width: 100%; ">
                 </div>
@@ -50,7 +50,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row fs-3 p-0 m-0">
+            <div class="row fs-3 py-2 px-4 m-0">
                 {% if product_object.description %}
                 <div class="border border-bottom border-bottom border-3 rounded-3 my-5"></div>
                 {{product_object.description}}
