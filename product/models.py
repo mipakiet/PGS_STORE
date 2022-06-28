@@ -84,6 +84,7 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
     price = models.DecimalField(decimal_places=2, max_digits=7)
     order_date = models.DateField(auto_now_add=True)
+    pgsid = models.CharField(max_length=50, blank=True, null=True)
 
     billed = models.BooleanField(default=False)
     released = models.BooleanField(default=False)
