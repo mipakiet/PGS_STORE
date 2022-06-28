@@ -88,6 +88,10 @@ class AddSubQuantityForm(ActionForm):
     quantity = forms.IntegerField(required=False)
 
 
+class PgsIDForm(ActionForm):
+    pgsid = forms.IntegerField(required=False)
+
+
 class ProductForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -204,7 +208,8 @@ class CartItemAdmin(SimpleHistoryAdmin):
         "price_for_all",
     )
     list_filter = (CityFilter, CategoryFilter, ReleasedFilter, BilledFilter)
-    actions = ["release", "bill", "cancel"]
+    actions = ["release", "bill", "cancel", "add_pgsid"]
+    action_form = PgsIDForm
     history_list_display = ["released", "billed"]
     exclude = ["order_id"]
     readonly_fields = ["released", "billed", "released_date"]
@@ -251,6 +256,14 @@ class CartItemAdmin(SimpleHistoryAdmin):
                 obj.product.quantity += obj.quantity
                 obj.product.save()
                 obj.delete()
+
+    def add_pgsid(self, request, queryset):
+        for obj in queryset:
+            if obj.pgsid is None:
+                obj.pgsid = str(request.POST["pgsid"])
+            else:
+                obj.pgsid = str(obj.pgsid) + " " + str(request.POST["pgsid"])
+            obj.save()
 
     # change behavior
     def save_model(self, request, obj, form, change):
