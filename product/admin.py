@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.admin.helpers import ActionForm
 from django import forms
 from simple_history.admin import SimpleHistoryAdmin
+from django.http import HttpResponseRedirect
 
 
 class CityFilter(admin.SimpleListFilter):
@@ -216,6 +217,7 @@ class CartItemAdmin(SimpleHistoryAdmin):
     list_per_page = 10
     form = CartItemForm
     search_fields = ["employee_name", "login", "address", "nip", "company_name"]
+    change_form_template = "admin/change_form_bill_release.html"
 
     # displayed name
     def product_name(self, obj):
@@ -320,6 +322,15 @@ class CartItemAdmin(SimpleHistoryAdmin):
                 return []
             else:
                 return ["released", "billed", "released_date"]
+
+    def response_change(self, request, obj):
+        if "_bill" in request.POST:
+            self.bill(request, [obj])
+            return HttpResponseRedirect(".")
+        if "_release" in request.POST:
+            self.release(request, [obj])
+            return HttpResponseRedirect(".")
+        return super().response_change(request, obj)
 
 
 @admin.register(Specification)
