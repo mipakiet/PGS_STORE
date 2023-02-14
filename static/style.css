@@ -61,12 +61,12 @@ body {
 
 .orange_button{
     border: 0;
-    color: #fd7e14;
+    color: #6C1D5F;
     background-color: transparent;
 }
 
 .orange_button:hover{
-    color: #faa157;
+    color: #913682;
 }
 
 .price{
