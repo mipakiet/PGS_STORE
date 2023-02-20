@@ -19,9 +19,9 @@
 <body>
     <header class="container my-3">
         <div class="row m-0 p-0">
-            <div class="col-8 col-lg-3 order-lg-1 m-0 p-0">
+            <div class="col-8 col-lg-3 order-lg-1 m-0 mt-2 p-0">
                 <a href="/">
-                    <img src="{% static '/pgsLogo.png' %}" alt="" style="height: 70px; width: auto;">
+                    <img src="{% static '/logo.png' %}" alt="" style="height: 55px; width: auto;">
                 </a>
             </div>
             <div class="col-4 col-lg-2 order-lg-3 text-end position-relative m-0 p-0">
@@ -47,7 +47,7 @@
         {% if messages %}
         <div class="row m-0 mt-3 p-0">
             {% for message in messages %}
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <div class="alert alert-primary alert-dismissible fade show" role="alert">
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
